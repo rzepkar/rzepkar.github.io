@@ -11,16 +11,6 @@ let positronLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}
 });
 positronLayer.addTo(map);
 
-// ImageOverlay für georeferenziertes Rasterbild hinzufügen
-let gebaeudeImage = L.imageOverlay(
-    'tiles/gebaeude.png',  // Pfad zum exportierten Rasterbild
-    [[50.171, 8.556], [50.269, 8.842]],  // Südwest- und Nordost-Ecke (BBOX)
-    {
-        opacity: 1,  // Transparenz (0 = transparent, 1 = undurchsichtig)
-        interactive: false  // Keine Interaktion (statisch)
-    }
-).addTo(map);
-
 
 // Layer: Features aus FastAPI laden
 let featuresLayer = L.geoJSON(null, {
