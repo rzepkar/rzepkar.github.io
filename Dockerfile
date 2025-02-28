@@ -1,5 +1,5 @@
-# Basis-Image für FastAPI und Uvicorn
-FROM tiangolo/uvicorn-gunicorn-fastapi:python3.9
+# Schlankes Python-Image
+FROM python:3.9-slim
 
 # Arbeitsverzeichnis festlegen
 WORKDIR /app
