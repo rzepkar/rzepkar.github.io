@@ -21,7 +21,7 @@ def get_db_connection():
         dbname="heatbox",
         user="postgres",
         password="Mavataxo+2",  # Hier dein Passwort eintragen!
-        host="localhost"
+        host="192.168.178.39"  # lokale ip4 Adresse 
     )
 
 # GET: Tabelle features (erster Test, später löschen!)
