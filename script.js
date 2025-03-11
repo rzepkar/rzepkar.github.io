@@ -19,7 +19,7 @@ let featuresLayer = L.geoJSON(null, {
         layer.bindPopup(`<b>${props.name}</b><br>Info: ${props.info}`);
     }
 });
-fetch('http://127.0.0.1:8000/get_data')
+fetch('https://fastapi-heatbox.onrender.com/get_data')
   .then(response => response.json())
   .then(data => {
       featuresLayer.addData(data).addTo(map);  // Hier: .addTo(map) hinzugefügt
@@ -39,7 +39,7 @@ let kommunenLayer = L.geoJSON(null, {
     }
 });
 
-fetch('http://127.0.0.1:8000/get_kommunen')
+fetch('https://fastapi-heatbox.onrender.com/get_kommunen')
   .then(response => response.json())
   .then(data => {
       kommunenLayer.addData(data).addTo(map);  // Hier: .addTo(map) hinzugefügt
@@ -57,7 +57,7 @@ let windenergieLayer = L.geoJSON(null, {
     }
 });
 
-fetch('http://127.0.0.1:8000/get_windenergieanlagen')
+fetch('https://fastapi-heatbox.onrender.com/get_windenergieanlagen')
   .then(response => response.json())
   .then(data => {
       windenergieLayer.addData(data).addTo(map);  // Hier: .addTo(map) hinzugefügt
