@@ -17,7 +17,7 @@ app.add_middleware(
 
 # Verbindung zur PostgreSQL-Datenbank
 def get_db_connection():
-    return psycopg2.connect(os.getenv("postgresql://user:QER9UOMQkwDqcRcZFfX5izL7eFtlNG1o@dpg-cv7vjjtds78s73cquj8g-a/heatbox")) 
+    return psycopg2.connect(os.getenv("DATABASE_URL"))
     )
 
 # GET: Tabelle features (erster Test, später löschen!)
