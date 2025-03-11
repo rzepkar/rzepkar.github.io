@@ -17,25 +17,22 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-
-
 def get_db_connection():
-    DATABASE_URL = os.getenv("DATABASE_URL")
+    DATABASE_URL = os.getenv("DATABASE_URL")  # Render-Umgebungsvariable
+    if DATABASE_URL is None:
+        raise ValueError("DATABASE_URL ist nicht gesetzt!")
 
-    if not DATABASE_URL:
-        raise ValueError("❌ ERROR: DATABASE_URL ist nicht gesetzt!")
-
-    print(f"📌 DATABASE_URL: {DATABASE_URL}")  # Debugging-Log
-
+    # Parse DATABASE_URL
     url = urllib.parse.urlparse(DATABASE_URL)
 
     return psycopg2.connect(
-        dbname=url.path[1:],  # Entfernt das führende '/'
+        dbname=url.path[1:],  # Entfernt das führende "/"
         user=url.username,
         password=url.password,
         host=url.hostname,
         port=url.port
     )
+
 
 @app.get("/test_db")
 def test_db():
