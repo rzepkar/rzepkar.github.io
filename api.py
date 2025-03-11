@@ -18,23 +18,33 @@ app.add_middleware(
 )
 
 
+
 def get_db_connection():
     DATABASE_URL = os.getenv("DATABASE_URL")
 
     if not DATABASE_URL:
-        raise ValueError(" ERROR: DATABASE_URL ist nicht gesetzt!")
+        raise ValueError("❌ ERROR: DATABASE_URL ist nicht gesetzt!")
 
-    print(f" DATABASE_URL: {DATABASE_URL}")  # Debugging-Log
+    print(f"📌 DATABASE_URL: {DATABASE_URL}")  # Debugging-Log
 
     url = urllib.parse.urlparse(DATABASE_URL)
 
     return psycopg2.connect(
-        dbname=url.path[1:],
+        dbname=url.path[1:],  # Entfernt das führende '/'
         user=url.username,
         password=url.password,
         host=url.hostname,
         port=url.port
     )
+
+@app.get("/test_db")
+def test_db():
+    try:
+        conn = get_db_connection()
+        return {"status": "✅ Verbindung erfolgreich!"}
+    except Exception as e:
+        return {"status": "❌ Verbindung fehlgeschlagen!", "error": str(e)}
+
 
 
 # GET: Tabelle features (erster Test, später löschen!)
