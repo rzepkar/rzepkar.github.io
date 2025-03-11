@@ -17,8 +17,8 @@ app.add_middleware(
 
 # Verbindung zur PostgreSQL-Datenbank
 def get_db_connection():
-    return psycopg2.connect(os.getenv("DATABASE_URL"))
-    )
+    DATABASE_URL = os.getenv("DATABASE_URL")  # Render-Variable abrufen
+    return psycopg2.connect(DATABASE_URL)
 
 # GET: Tabelle features (erster Test, später löschen!)
 @app.get("/get_data")
