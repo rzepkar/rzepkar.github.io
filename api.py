@@ -17,11 +17,7 @@ app.add_middleware(
 
 # Verbindung zur PostgreSQL-Datenbank
 def get_db_connection():
-    return psycopg2.connect(
-        dbname="heatbox",
-        user="postgres",
-        password="Mavataxo+2",  # Hier dein Passwort eintragen!
-        host="192.168.178.39"  # lokale ip4 Adresse 
+    return psycopg2.connect(os.getenv("postgresql://user:QER9UOMQkwDqcRcZFfX5izL7eFtlNG1o@dpg-cv7vjjtds78s73cquj8g-a/heatbox")) 
     )
 
 # GET: Tabelle features (erster Test, später löschen!)
