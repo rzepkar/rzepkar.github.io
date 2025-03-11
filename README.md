@@ -1,1 +1,1 @@
-heatbox simulation - Leaflet webmap with Fast API and PostGIS Backend
+heatbox simulation - Leaflet webmap with Fast API (hosted with Render.com) and PostGIS Backend
