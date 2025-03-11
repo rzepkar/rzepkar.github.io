@@ -1,6 +1,8 @@
 from fastapi import FastAPI
 import psycopg2
 import json
+import os
+import urllib.parse
 from fastapi.middleware.cors import CORSMiddleware
 
 # FastAPI-Instanz erstellen
@@ -15,10 +17,22 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Verbindung zur PostgreSQL-Datenbank
 def get_db_connection():
     DATABASE_URL = os.getenv("DATABASE_URL")  # Render-Variable abrufen
-    return psycopg2.connect(DATABASE_URL)
+    if DATABASE_URL is None:
+        raise ValueError("DATABASE_URL ist nicht gesetzt!")
+
+    # Parse DATABASE_URL
+    url = urllib.parse.urlparse(DATABASE_URL)
+
+    return psycopg2.connect(
+        dbname=url.path[1:],  # Entfernt das führende '/'
+        user=url.username,
+        password=url.password,
+        host=url.hostname,
+        port=url.port
+    )
+
 
 # GET: Tabelle features (erster Test, später löschen!)
 @app.get("/get_data")
