@@ -2,7 +2,7 @@
 let map = L.map('map', {
     center: [50.228320, 8.674393],  // Frankfurt am Main
     zoom: 13,
-	maxZoom: 15,			//adjust
+	maxZoom: 18,			//adjust
 	scrollWheelZoom: false,	//default
 	smoothWheelZoom: true,	//plugin
 	smoothSensitivity: 1.2	//adjust
@@ -11,15 +11,9 @@ let map = L.map('map', {
 // Basis-Layer (Hintergrundkarte)
 let positronLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {
     attribution: '© CartoDB',
-    maxZoom: 15
+    maxZoom: 18
 });
 positronLayer.addTo(map);
-
-map.on('zoomend', function() {
-    if (map.getZoom() > 18) {  // Falls höher als 18 gezoomt wurde
-        map.setZoom(18);  // Setze es zurück auf 18
-    }
-});
 
 // Layer: Features aus FastAPI laden
 let featuresLayer = L.geoJSON(null, {
