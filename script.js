@@ -15,6 +15,11 @@ let positronLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}
 });
 positronLayer.addTo(map);
 
+map.on('zoomend', function() {
+    if (map.getZoom() > 18) {  // Falls höher als 18 gezoomt wurde
+        map.setZoom(18);  // Setze es zurück auf 18
+    }
+});
 
 // Layer: Features aus FastAPI laden
 let featuresLayer = L.geoJSON(null, {
@@ -23,6 +28,7 @@ let featuresLayer = L.geoJSON(null, {
         layer.bindPopup(`<b>${props.name}</b><br>Info: ${props.info}`);
     }
 });
+
 fetch('https://fastapi-heatbox.onrender.com/get_data')
   .then(response => response.json())
   .then(data => {
