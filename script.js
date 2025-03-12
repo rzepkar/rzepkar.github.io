@@ -5,7 +5,7 @@ let map = L.map('map', {
     zoom: 13,
 	scrollWheelZoom: false,	//default
 	smoothWheelZoom: true,	//plugin
-	smoothSensitivity: 1	//adjust
+	smoothSensitivity: 1.2	//adjust
 });
 
 // Basis-Layer (Hintergrundkarte)
