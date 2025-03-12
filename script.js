@@ -1,7 +1,10 @@
 // Leaflet-Karte initialisieren
 let map = L.map('map', {
     center: [50.228320, 8.674393],  // Frankfurt am Main
-    zoom: 13
+    zoom: 13,
+	scrollWheelZoom: false,	//default
+	smoothWheelZoom: true,	//plugin
+	smoothSensitivity: 1	//adjust
 });
 
 // Basis-Layer (Hintergrundkarte)
