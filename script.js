@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 // Leaflet-Karte initialisieren
 let map = L.map('map', {
     center: [50.228320, 8.674393],  // Frankfurt am Main
@@ -265,4 +264,4 @@ resetButton.onAdd = function () {
     return div;
 };
 resetButton.addTo(map);
->>>>>>> eab08226cd6c07b89b9903feb69d33df7dbb50be
+
