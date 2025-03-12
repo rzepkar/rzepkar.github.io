@@ -11,7 +11,7 @@ let map = L.map('map', {
 // Basis-Layer (Hintergrundkarte)
 let positronLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {
     attribution: '© CartoDB',
-    maxZoom: 19
+    maxZoom: 15
 });
 positronLayer.addTo(map);
 
