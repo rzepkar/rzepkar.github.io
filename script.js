@@ -73,15 +73,15 @@ fetch('https://fastapi-heatbox.onrender.com/get_windenergieanlagen')
 document.addEventListener("DOMContentLoaded", function() {
     var osmb = new OSMBuildings(map).date(new Date());
 
-    function loadBuildings() {
+    function loadBuildings(initialLoad = false) {
         fetch('https://fastapi-heatbox.onrender.com/get_buildings')
             .then(response => response.json())
             .then(data => {
                 console.log("Empfangene Gebäudedaten:", data);
                 osmb.set(data); // Gebäude aktualisieren
 
-                // Kamera auf erstes Gebäude setzen
-                if (data.features && data.features.length > 0) {
+                // Kamera nur beim ersten Laden setzen, nicht bei jedem Zoom
+                if (initialLoad && data.features && data.features.length > 0) {
                     var firstBuilding = data.features[0].geometry.coordinates[0][0];
                     map.setView([firstBuilding[1], firstBuilding[0]], 18);
                 }
@@ -89,12 +89,12 @@ document.addEventListener("DOMContentLoaded", function() {
             .catch(error => console.error('Fehler beim Laden der Gebäudedaten:', error));
     }
 
-    // Gebäude einmal initial laden
-    loadBuildings();
+    // Gebäude einmal initial laden (mit Zentrierung)
+    loadBuildings(true);
 
-    // Gebäude bei jeder Zoom-Änderung erneut setzen
+    // Gebäude bei jeder Zoom-Änderung erneut setzen (ohne Zentrierung)
     map.on('zoomend', function() {
-        loadBuildings();
+        loadBuildings(false);
     });
 });
 
