@@ -73,34 +73,45 @@ fetch('https://fastapi-heatbox.onrender.com/get_windenergieanlagen')
 document.addEventListener("DOMContentLoaded", function() {
     var osmb = new OSMBuildings(map).date(new Date());
 
-    function loadBuildings(initialLoad = false) {
+    function loadBuildings(isInitialLoad = false) {
+        console.log("🔄 Lade Gebäude-Daten...");
+        
         fetch('https://fastapi-heatbox.onrender.com/get_buildings')
             .then(response => response.json())
             .then(data => {
-                console.log("Empfangene Gebäudedaten:", data);
+                console.log("✅ Gebäude-Daten erfolgreich empfangen:", data);
 
-                // 🛠 WICHTIG: Vor dem Neuladen die alten Gebäude entfernen
-                osmb.clear(); 
+                if (data.features && data.features.length > 0) {
+                    // Vorhandene Gebäude erst einmal leeren
+                    osmb.set([]); 
+                    
+                    // Neue Gebäude setzen
+                    osmb.set(data);
+                    console.log("🏗 Gebäude aktualisiert.");
 
-                osmb.set(data); // Gebäude aktualisieren
-
-                // Kamera nur beim ersten Laden setzen
-                if (initialLoad && data.features && data.features.length > 0) {
-                    var firstBuilding = data.features[0].geometry.coordinates[0][0];
-                    map.setView([firstBuilding[1], firstBuilding[0]], 18);
+                    // Falls dies das erste Laden ist, dann setze die Karte
+                    if (isInitialLoad) {
+                        var firstBuilding = data.features[0].geometry.coordinates[0][0];
+                        map.setView([firstBuilding[1], firstBuilding[0]], 18);
+                        console.log("📍 Karte auf erstes Gebäude zentriert.");
+                    }
+                } else {
+                    console.warn("⚠ Keine Gebäude-Daten empfangen!");
                 }
             })
-            .catch(error => console.error('Fehler beim Laden der Gebäudedaten:', error));
+            .catch(error => console.error('❌ Fehler beim Laden der Gebäudedaten:', error));
     }
 
-    // Gebäude einmal initial laden (mit Zentrierung)
+    // Gebäude einmal initial laden
     loadBuildings(true);
 
-    // Gebäude bei jeder Zoom-Änderung erneut setzen (ohne Zentrierung)
+    // Gebäude bei jeder Zoom-Änderung erneut setzen
     map.on('zoomend', function() {
+        console.log("🔍 Zoomstufe geändert. Lade Gebäude neu...");
         loadBuildings(false);
     });
 });
+
 
 
 
