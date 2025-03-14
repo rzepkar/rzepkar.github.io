@@ -78,7 +78,7 @@ document.addEventListener("DOMContentLoaded", function() {
             .then(response => response.json())
             .then(data => {
                 console.log("Empfangene Gebäudedaten:", data);
-                osmb.set(data); // Gebäude in 3D anzeigen
+                osmb.set(data); // Gebäude aktualisieren
 
                 // Kamera auf erstes Gebäude setzen
                 if (data.features && data.features.length > 0) {
@@ -92,9 +92,8 @@ document.addEventListener("DOMContentLoaded", function() {
     // Gebäude einmal initial laden
     loadBuildings();
 
-    // Gebäude bei jeder Zoom-Änderung neu rendern
+    // Gebäude bei jeder Zoom-Änderung erneut setzen
     map.on('zoomend', function() {
-        osmb.clear();  // ❗️ Vorherige Gebäude entfernen
         loadBuildings();
     });
 });
