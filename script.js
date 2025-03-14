@@ -72,7 +72,8 @@ fetch('https://fastapi-heatbox.onrender.com/get_windenergieanlagen')
 
 
 document.addEventListener("DOMContentLoaded", function() {
-    var osmb = new OSMBuildings(map).date(new Date());
+    var osmb = new OSMBuildings(map).date(new Date())
+    .tileSource('https://a.osmbuildings.org/{z}/{x}/{y}.png');
 
     fetch('https://fastapi-heatbox.onrender.com/get_buildings')
       .then(response => response.json())
