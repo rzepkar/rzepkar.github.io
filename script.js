@@ -74,12 +74,14 @@ fetch('https://fastapi-heatbox.onrender.com/get_windenergieanlagen')
 document.addEventListener("DOMContentLoaded", function() {
     var osmb = new OSMBuildings(map).date(new Date());
 
-    fetch('https://fastapi-heatbox.onrender.com/get_buildings')
-      .then(response => response.json())
-      .then(data => {
-          osmb.set(data);  // Gebäude in 3D anzeigen
-      })
-      .catch(error => console.error('Fehler beim Laden der Gebäudedaten:', error));
+	fetch('https://fastapi-heatbox.onrender.com/get_buildings')
+	  .then(response => response.json())
+	  .then(data => {
+		  console.log("Empfangene Gebäudedaten:", data);  // 👈 Debug-Log
+		  osmb.set(data);  // Gebäude in 3D anzeigen
+	  })
+	  .catch(error => console.error('Fehler beim Laden der Gebäudedaten:', error));
+
 });
 
 
