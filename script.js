@@ -16,6 +16,8 @@ let positronLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}
 });
 positronLayer.addTo(map);
 
+var osmb = new OSMBuildings(map).date(new Date());
+
 // Layer: Features aus FastAPI laden
 let featuresLayer = L.geoJSON(null, {
     onEachFeature: function (feature, layer) {
@@ -66,6 +68,13 @@ fetch('https://fastapi-heatbox.onrender.com/get_windenergieanlagen')
   .then(response => response.json())
   .then(data => {
       windenergieLayer.addData(data).addTo(map);  // Hier: .addTo(map) hinzugefügt
+  });
+
+
+fetch('https://fastapi-heatbox.onrender.com/get_buildings')
+  .then(response => response.json())
+  .then(data => {
+      osmb.set(data);  // Gebäude in 3D anzeigen
   });
 
 

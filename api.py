@@ -67,6 +67,28 @@ def get_data():
     
     return {"type": "FeatureCollection", "features": features}
     
+# GET: Tabelle buildings     
+@app.get("/get_buildings")
+def get_buildings():
+    conn = get_db_connection()
+    cur = conn.cursor()
+
+    cur.execute("SELECT id, name, height, ST_AsGeoJSON(geom) FROM buildings;")
+    features = []
+
+    for row in cur.fetchall():
+        feature = {
+            "type": "Feature",
+            "properties": {"id": row[0], "name": row[1], "height": row[2]},
+            "geometry": json.loads(row[3])
+        }
+        features.append(feature)
+
+    cur.close()
+    conn.close()
+
+    return {"type": "FeatureCollection", "features": features}
+    
 # GET: Tabelle Kommunen mit Case-Sensitivity
 @app.get("/get_kommunen")
 def get_kommunen():
