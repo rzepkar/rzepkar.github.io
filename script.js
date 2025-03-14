@@ -78,9 +78,13 @@ document.addEventListener("DOMContentLoaded", function() {
             .then(response => response.json())
             .then(data => {
                 console.log("Empfangene Gebäudedaten:", data);
+
+                // 🛠 WICHTIG: Vor dem Neuladen die alten Gebäude entfernen
+                osmb.clear(); 
+
                 osmb.set(data); // Gebäude aktualisieren
 
-                // Kamera nur beim ersten Laden setzen, nicht bei jedem Zoom
+                // Kamera nur beim ersten Laden setzen
                 if (initialLoad && data.features && data.features.length > 0) {
                     var firstBuilding = data.features[0].geometry.coordinates[0][0];
                     map.setView([firstBuilding[1], firstBuilding[0]], 18);
@@ -97,6 +101,7 @@ document.addEventListener("DOMContentLoaded", function() {
         loadBuildings(false);
     });
 });
+
 
 
 
