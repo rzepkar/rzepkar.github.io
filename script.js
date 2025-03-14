@@ -84,8 +84,6 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 
 
-});
-
 
 // hier neue Daten hinzufügen ##########
 
