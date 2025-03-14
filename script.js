@@ -79,9 +79,19 @@ document.addEventListener("DOMContentLoaded", function() {
       .then(data => {
           console.log("Empfangene Gebäudedaten:", data);  // 👈 Debug-Log
           osmb.set(data);  // Gebäude in 3D anzeigen
+		  
+			if (data.features && data.features.length > 0) {
+				var firstBuilding = data.features[0].geometry.coordinates[0][0];
+				map.setView([firstBuilding[1], firstBuilding[0]], 18);
+			}
+
+}
+
+		  
       })
       .catch(error => console.error('Fehler beim Laden der Gebäudedaten:', error));
 });
+
 
 
 
