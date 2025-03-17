@@ -87,32 +87,27 @@ document.addEventListener("DOMContentLoaded", function() {
 
 				osmb.set(data); // Gebäude aktualisieren
 				console.log("🏗 Gebäude aktualisiert.");
-
-				// 🔎 Falls Gebäude vorhanden sind, auf das erste Gebäude zoomen
-				if (data.features && data.features.length > 0) {
-					var firstBuilding = data.features[0].geometry.coordinates[0][0];
-					console.log("📍 Zoom auf erstes Gebäude:", firstBuilding);
-					map.setView([firstBuilding[1], firstBuilding[0]], 18);
-				}
 			})
 			.catch(error => console.error('❌ Fehler beim Laden der Gebäudedaten:', error));
 	}
+
 
     // Gebäude einmal initial laden
     loadBuildings(true);
 	
 	map.on('zoomend', function() {
-		console.log("🔍 Zoomstufe geändert. Lade Gebäude neu...");
+		console.log("🔍 Zoomstufe geändert. Gebäude werden neu geladen...");
 		
 		if (typeof osmb !== "undefined") { 
 			osmb.set([]);  // Leere vorherige Gebäude-Daten
-			loadBuildings();  // Lade neu
 		} else {
 			console.warn("⚠️ osmb ist nicht definiert. Initialisiere es neu.");
 			osmb = new OSMBuildings(map).date(new Date());
-			loadBuildings();
 		}
+
+		loadBuildings();  // Gebäude-Daten neu abrufen
 	});
+
 
 });
 
