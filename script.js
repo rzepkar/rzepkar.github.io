@@ -120,8 +120,6 @@ map.on('zoomend', function() {
 
 
 
-
-
 // hier neue Daten hinzufügen ##########
 
 
