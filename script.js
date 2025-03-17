@@ -105,10 +105,13 @@ document.addEventListener("DOMContentLoaded", function() {
     // Gebäude einmal initial laden
     loadBuildings(true);
 
-    // Gebäude bei jeder Zoom-Änderung erneut setzen
-    map.on('zoomend', function() {
-        console.log("🔍 Zoomstufe geändert. Lade Gebäude neu...");
-        loadBuildings(false);
+    // Gebäude bei jeder Zoom-Änderung erneut setzen´
+	map.on('zoomend', function() {
+    console.log("🔍 Zoomstufe geändert. Lade Gebäude neu...");
+    loadBuildings(false);
+    
+    // Trick: Stil manuell setzen, um das Rendering zu „erzwingen“
+    osmb.style({ color: 'gray', roofColor: 'lightgray' });	
     });
 });
 
