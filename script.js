@@ -71,10 +71,13 @@ fetch('https://fastapi-heatbox.onrender.com/get_windenergieanlagen')
   });
 
 document.addEventListener("DOMContentLoaded", function() {
-    var osmb = new OSMBuildings(map).date(new Date());
+    console.log("🚀 Initialisiere Karte & lade Gebäude...");
+    loadBuildings(true);  // Erstes Laden mit Zentrierung
 
 
-	function loadBuildings() {
+
+
+	function loadBuildings(initialLoad = false) {
 		fetch('https://fastapi-heatbox.onrender.com/get_buildings')
 			.then(response => response.json())
 			.then(data => {
@@ -87,6 +90,13 @@ document.addEventListener("DOMContentLoaded", function() {
 
 				osmb.set(data); // Gebäude aktualisieren
 				console.log("🏗 Gebäude aktualisiert.");
+
+				// Nur beim ersten Laden zentrieren
+				if (initialLoad && data.features && data.features.length > 0) {
+					let firstBuilding = data.features[0].geometry.coordinates[0][0];
+					map.setView([firstBuilding[1], firstBuilding[0]], 18);
+					console.log("📍 Karte auf Gebäude zentriert.");
+				}
 			})
 			.catch(error => console.error('❌ Fehler beim Laden der Gebäudedaten:', error));
 	}
@@ -105,9 +115,8 @@ document.addEventListener("DOMContentLoaded", function() {
 			osmb = new OSMBuildings(map).date(new Date());
 		}
 
-		loadBuildings();  // Gebäude-Daten neu abrufen
+		loadBuildings(false);  // Gebäude neu abrufen, aber **nicht** neu zentrieren
 	});
-
 
 });
 
