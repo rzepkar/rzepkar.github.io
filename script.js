@@ -74,29 +74,46 @@ fetch('https://fastapi-heatbox.onrender.com/get_windenergieanlagen')
 var osmb = null;
 
 // Funktion zum Laden der Gebäude
-function loadBuildings(initialLoad = false) {
-    fetch('https://fastapi-heatbox.onrender.com/get_buildings')
-        .then(response => response.json())
-        .then(data => {
-            console.log("✅ Gebäude-Daten erfolgreich empfangen:", data);
+document.addEventListener("DOMContentLoaded", function() {
+    console.log("🚀 Initialisiere Karte & lade Gebäude...");
 
-            if (!osmb) {
-                console.warn("⚠️ osmb nicht initialisiert, erstelle neue Instanz.");
-                osmb = new OSMBuildings(map).date(new Date());
-            }
+    // Prüfen, ob OSMBuildings existiert, sonst initialisieren
+    if (typeof OSMBuildings === "undefined") {
+        console.error("❌ OSMBuildings wurde nicht geladen. Prüfe die CDN-URL!");
+        return;  // Stoppe den Code, falls OSMBuildings nicht existiert
+    }
 
-            osmb.set(data); // Gebäude aktualisieren
-            console.log("🏗 Gebäude aktualisiert.");
+    let osmb = new OSMBuildings(map).date(new Date()); // Initialisiere OSMBuildings
 
-            // Nur beim ersten Laden zentrieren
-            if (initialLoad && data.features && data.features.length > 0) {
-                let firstBuilding = data.features[0].geometry.coordinates[0][0];
-                map.setView([firstBuilding[1], firstBuilding[0]], 18);
-                console.log("📍 Karte auf Gebäude zentriert.");
-            }
-        })
-        .catch(error => console.error('❌ Fehler beim Laden der Gebäudedaten:', error));
-}
+    function loadBuildings(initialLoad = false) {
+        fetch('https://fastapi-heatbox.onrender.com/get_buildings')
+            .then(response => response.json())
+            .then(data => {
+                console.log("✅ Gebäude-Daten erfolgreich empfangen:", data);
+
+                osmb.set(data); // Gebäude aktualisieren
+                console.log("🏗 Gebäude aktualisiert.");
+
+                // Nur beim ersten Laden zentrieren
+                if (initialLoad && data.features && data.features.length > 0) {
+                    let firstBuilding = data.features[0].geometry.coordinates[0][0];
+                    map.setView([firstBuilding[1], firstBuilding[0]], 18);
+                    console.log("📍 Karte auf Gebäude zentriert.");
+                }
+            })
+            .catch(error => console.error('❌ Fehler beim Laden der Gebäudedaten:', error));
+    }
+
+    // Gebäude einmal initial laden
+    loadBuildings(true);
+    
+    // Gebäude bei jeder Zoom-Änderung erneut setzen
+    map.on('zoomend', function() {
+        console.log("🔍 Zoomstufe geändert. Gebäude werden neu geladen...");
+        loadBuildings(false);
+    });
+});
+
 
 // ⬇⬇⬇ Gebäudeladen & Zoom-Handling ⬇⬇⬇
 document.addEventListener("DOMContentLoaded", function() {
