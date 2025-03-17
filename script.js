@@ -9,9 +9,6 @@ let map = L.map('map', {
 	smoothSensitivity: 1.3	//adjust
 });
 
-let osmb;  // Globale Variable für OSMBuildings
-
-
 // Basis-Layer (Hintergrundkarte)
 let positronLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {
     attribution: '© CartoDB',
