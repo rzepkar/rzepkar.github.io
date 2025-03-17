@@ -70,69 +70,44 @@ fetch('https://fastapi-heatbox.onrender.com/get_windenergieanlagen')
       windenergieLayer.addData(data).addTo(map);  // Hier: .addTo(map) hinzugefügt
   });
 
-// ⬇⬇⬇ FIX: osmb richtig initialisieren ⬇⬇⬇
-var osmb = null;
+let osmb;
 
-// Funktion zum Laden der Gebäude
-document.addEventListener("DOMContentLoaded", function() {
-    console.log("🚀 Initialisiere Karte & lade Gebäude...");
-
-    // Prüfen, ob OSMBuildings existiert, sonst initialisieren
-    if (typeof OSMBuildings === "undefined") {
-        console.error("❌ OSMBuildings wurde nicht geladen. Prüfe die CDN-URL!");
-        return;  // Stoppe den Code, falls OSMBuildings nicht existiert
-    }
-
-    let osmb = new OSMBuildings(map).date(new Date()); // Initialisiere OSMBuildings
-
-    function loadBuildings(initialLoad = false) {
-        fetch('https://fastapi-heatbox.onrender.com/get_buildings')
-            .then(response => response.json())
-            .then(data => {
-                console.log("✅ Gebäude-Daten erfolgreich empfangen:", data);
-
-                osmb.set(data); // Gebäude aktualisieren
-                console.log("🏗 Gebäude aktualisiert.");
-
-                // Nur beim ersten Laden zentrieren
-                if (initialLoad && data.features && data.features.length > 0) {
-                    let firstBuilding = data.features[0].geometry.coordinates[0][0];
-                    map.setView([firstBuilding[1], firstBuilding[0]], 18);
-                    console.log("📍 Karte auf Gebäude zentriert.");
-                }
-            })
-            .catch(error => console.error('❌ Fehler beim Laden der Gebäudedaten:', error));
-    }
-
-    // Gebäude einmal initial laden
-    loadBuildings(true);
-    
-    // Gebäude bei jeder Zoom-Änderung erneut setzen
-    map.on('zoomend', function() {
-        console.log("🔍 Zoomstufe geändert. Gebäude werden neu geladen...");
-        loadBuildings(false);
-    });
-});
-
-
-// ⬇⬇⬇ Gebäudeladen & Zoom-Handling ⬇⬇⬇
-document.addEventListener("DOMContentLoaded", function() {
-    console.log("🚀 Initialisiere Karte & lade Gebäude...");
-    loadBuildings(true);  // Erstes Laden mit Zentrierung
-});
-
-// Beim Zoomen Gebäude neu laden (ohne Zurücksetzen der Karte)
-map.on('zoomend', function() {
-    console.log("🔍 Zoomstufe geändert. Gebäude werden neu geladen...");
-
-    if (osmb) { 
-        osmb.set([]);  // Alte Gebäude-Daten leeren
-    } else {
-        console.warn("⚠️ osmb ist nicht definiert. Initialisiere es neu.");
+// Gebäude-Ladefunktion muss GLOBAL sein
+function loadBuildings(initialLoad = false) {
+    if (!osmb) {
+        console.warn("⚠️ osmb nicht initialisiert, erstelle neue Instanz.");
         osmb = new OSMBuildings(map).date(new Date());
     }
 
-    loadBuildings(false);  // Gebäude neu abrufen, aber **nicht** neu zentrieren
+    fetch('https://fastapi-heatbox.onrender.com/get_buildings')
+        .then(response => response.json())
+        .then(data => {
+            console.log("✅ Gebäude-Daten erfolgreich empfangen:", data);
+
+            osmb.set(data); // Gebäude aktualisieren
+            console.log("🏗 Gebäude aktualisiert.");
+
+            // Nur beim ersten Laden zentrieren
+            if (initialLoad && data.features && data.features.length > 0) {
+                let firstBuilding = data.features[0].geometry.coordinates[0][0];
+                map.setView([firstBuilding[1], firstBuilding[0]], 18);
+                console.log("📍 Karte auf Gebäude zentriert.");
+            }
+        })
+        .catch(error => console.error('❌ Fehler beim Laden der Gebäudedaten:', error));
+}
+
+document.addEventListener("DOMContentLoaded", function() {
+    console.log("🚀 Initialisiere Karte & lade Gebäude...");
+    
+    // Gebäude einmal initial laden
+    loadBuildings(true);
+});
+
+// Gebäude bei jeder Zoom-Änderung erneut setzen
+map.on('zoomend', function() {
+    console.log("🔍 Zoomstufe geändert. Gebäude werden neu geladen...");
+    loadBuildings(false);
 });
 
 
