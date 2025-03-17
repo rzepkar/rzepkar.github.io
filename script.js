@@ -73,46 +73,42 @@ fetch('https://fastapi-heatbox.onrender.com/get_windenergieanlagen')
 document.addEventListener("DOMContentLoaded", function() {
     var osmb = new OSMBuildings(map).date(new Date());
 
-    function loadBuildings(isInitialLoad = false) {
-        console.log("🔄 Lade Gebäude-Daten...");
-        
-        fetch('https://fastapi-heatbox.onrender.com/get_buildings')
-            .then(response => response.json())
-            .then(data => {
-                console.log("✅ Gebäude-Daten erfolgreich empfangen:", data);
+	function loadBuildings() {
+		fetch('https://fastapi-heatbox.onrender.com/get_buildings')
+			.then(response => response.json())
+			.then(data => {
+				console.log("✅ Gebäude-Daten erfolgreich empfangen:", data);
 
-                if (data.features && data.features.length > 0) {
-                    // Vorhandene Gebäude erst einmal leeren
-                    osmb.set([]); 
-                    
-                    // Neue Gebäude setzen
-                    osmb.set(data);
-                    console.log("🏗 Gebäude aktualisiert.");
+				if (!osmb) {
+					console.warn("⚠️ osmb nicht initialisiert, erstelle neue Instanz.");
+					osmb = new OSMBuildings(map).date(new Date());
+				}
 
-                    // Falls dies das erste Laden ist, dann setze die Karte
-                    if (isInitialLoad) {
-                        var firstBuilding = data.features[0].geometry.coordinates[0][0];
-                        map.setView([firstBuilding[1], firstBuilding[0]], 18);
-                        console.log("📍 Karte auf erstes Gebäude zentriert.");
-                    }
-                } else {
-                    console.warn("⚠ Keine Gebäude-Daten empfangen!");
-                }
-            })
-            .catch(error => console.error('❌ Fehler beim Laden der Gebäudedaten:', error));
-    }
+				osmb.set(data); // Gebäude aktualisieren
+				console.log("🏗 Gebäude aktualisiert.");
+			})
+			.catch(error => console.error('❌ Fehler beim Laden der Gebäudedaten:', error));
+	}
+
+
+
 
     // Gebäude einmal initial laden
     loadBuildings(true);
 
-    // Gebäude bei jeder Zoom-Änderung erneut setzen´
 	map.on('zoomend', function() {
-    console.log("🔍 Zoomstufe geändert. Lade Gebäude neu...");
-    loadBuildings(false);
-    
-    // Trick: Stil manuell setzen, um das Rendering zu „erzwingen“
-    osmb.style({ color: 'gray', roofColor: 'lightgray' });	
-    });
+		console.log("🔍 Zoomstufe geändert. Lade Gebäude neu...");
+		
+		if (typeof osmb !== "undefined") { 
+			osmb.set([]);  // Lösche vorherige Gebäude
+			loadBuildings();
+		} else {
+			console.warn("⚠️ osmb ist nicht definiert. Initialisiere es neu.");
+			osmb = new OSMBuildings(map).date(new Date());
+			loadBuildings();
+		}
+	});
+
 });
 
 
