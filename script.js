@@ -10,11 +10,10 @@ let map = L.map('map', {
 });
 
 // basemap 
-let customBasemap = L.tileLayer('https://fh-frankfurt.maps.arcgis.com/sharing/rest/content/items/12580bec1ef54ffb902256376df0a268/resources/styles/root.json?f=pjson', {
-    attribution: '© Ihr Kartenanbieter',
-    maxZoom: 19
+let customBasemap = L.esri.Vector.vectorTileLayer("12580bec1ef54ffb902256376df0a268", {
 });
 customBasemap.addTo(map);
+
 
 
 
