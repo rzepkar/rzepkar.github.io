@@ -1,4 +1,4 @@
-// Leaflet-Karte initialisieren
+// 1️⃣ Leaflet-Karte initialisieren
 let map = L.map('map', {
     center: [50.228320, 8.674393],  // Frankfurt am Main
     zoom: 13,
@@ -9,16 +9,48 @@ let map = L.map('map', {
     smoothSensitivity: 1.3
 });
 
-// Basis-Layer (Hintergrundkarte)
+// 2️⃣ Basis-Layer (Hintergrundkarte)
 let positronLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {
     attribution: '© CartoDB',
     maxZoom: 19
 });
 positronLayer.addTo(map);
 
-// OSMBuildings-Instanz erstellen (wird nur einmal erstellt)
+// 3️⃣ OSMBuildings-Instanz erstellen (nur einmal!)
 let osmb = new OSMBuildings(map).date(new Date());
 
+// 4️⃣ **Funktion: Gebäude laden & anzeigen**
+function loadBuildings(initialLoad = false) {
+    fetch('https://fastapi-heatbox.onrender.com/get_buildings')
+        .then(response => response.json())
+        .then(data => {
+            console.log("✅ Gebäude-Daten erfolgreich empfangen:", data);
+
+            // Gebäude aktualisieren
+            osmb.set(data);
+            console.log("🏗 Gebäude aktualisiert.");
+
+            // **Nur beim ersten Laden die Karte auf das erste Gebäude setzen**
+            if (initialLoad && data.features && data.features.length > 0) {
+                let firstBuilding = data.features[0].geometry.coordinates[0][0];
+                map.setView([firstBuilding[1], firstBuilding[0]], map.getZoom(), { animate: false });
+                console.log("📍 Karte auf Gebäude zentriert.");
+            }
+        })
+        .catch(error => console.error('❌ Fehler beim Laden der Gebäudedaten:', error));
+}
+
+// 5️⃣ **👀 Gebäude einmal initial laden (mit Zentrierung)**
+document.addEventListener("DOMContentLoaded", function() {
+    console.log("🚀 Initialisiere Karte & lade Gebäude...");
+    loadBuildings(true);
+});
+
+// 6️⃣ **🔄 Gebäude bei Zoom-Änderung aktualisieren (ohne Zentrierung)**
+map.on('zoomend', function() {
+    console.log("🔍 Zoom geändert. Gebäude werden nur aktualisiert...");
+    loadBuildings(false);
+});
 
 // Layer: Features aus FastAPI laden
 let featuresLayer = L.geoJSON(null, {
@@ -72,38 +104,6 @@ fetch('https://fastapi-heatbox.onrender.com/get_windenergieanlagen')
       windenergieLayer.addData(data).addTo(map);  // Hier: .addTo(map) hinzugefügt
   });
   
-// 🔄 **Funktion zum Laden der Gebäudedaten**
-function loadBuildings(initialLoad = false) {
-    fetch('https://fastapi-heatbox.onrender.com/get_buildings')
-        .then(response => response.json())
-        .then(data => {
-            console.log("✅ Gebäude-Daten erfolgreich empfangen:", data);
-            osmb.set(data); // Gebäude aktualisieren
-            console.log("🏗 Gebäude aktualisiert.");
-
-            // **Nur beim ersten Laden die Karte auf das erste Gebäude setzen**
-            if (initialLoad && data.features && data.features.length > 0) {
-                let firstBuilding = data.features[0].geometry.coordinates[0][0];
-                map.setView([firstBuilding[1], firstBuilding[0]], map.getZoom()); // 🛠 **Setzt nur beim Start**
-                console.log("📍 Karte auf Gebäude zentriert.");
-            }
-        })
-        .catch(error => console.error('❌ Fehler beim Laden der Gebäudedaten:', error));
-}
-
-// **🔄 Gebäude einmal initial laden (mit Zentrierung)**
-document.addEventListener("DOMContentLoaded", function() {
-    console.log("🚀 Initialisiere Karte & lade Gebäude...");
-    loadBuildings(true); // Nur einmal mit Zentrierung
-});
-
-// **👀 Gebäude bei Zoom-Änderung aktualisieren (ohne Zentrierung)**
-map.on('zoomend', function() {
-    console.log("🔍 Zoom geändert. Gebäude werden nur aktualisiert...");
-    loadBuildings(false); // **Daten nachladen, aber keine Zentrierung mehr!**
-});
-
-
 
 
 // hier neue Daten hinzufügen ##########
