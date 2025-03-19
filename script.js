@@ -10,11 +10,12 @@ let map = L.map('map', {
 });
 
 // basemap 
-let stadiaSmooth = L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png', {
-    attribution: '&copy; Stadia Maps, OpenStreetMap contributors',
+let cartoVoyagerNoLabels = L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager_nolabels/{z}/{x}/{y}{r}.png', {
+    attribution: '&copy; CartoDB, OpenStreetMap contributors',
     maxZoom: 20
 });
-stadiaSmooth.addTo(map);
+cartoVoyagerNoLabels.addTo(map);
+
 
 
 
