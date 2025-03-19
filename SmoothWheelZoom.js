@@ -8,7 +8,7 @@ L.Map.mergeOptions({
 
     // @option smoothWheelZoom: number = 1
     // setting zoom speed
-    smoothSensitivity:1
+    smoothSensitivity:0.5
 
 });
 
