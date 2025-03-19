@@ -5,7 +5,7 @@ let map = L.map('map', {
     minZoom: 10,
     maxZoom: 19,
     scrollWheelZoom: true,
-    smoothWheelZoom: false,
+    smoothWheelZoom: true,
     smoothSensitivity: 1.3
 });
 
