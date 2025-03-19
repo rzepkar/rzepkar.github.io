@@ -33,8 +33,10 @@ function loadBuildings(initialLoad = false) {
             // **Nur beim ersten Laden die Karte auf das erste Gebäude setzen**
             if (initialLoad && data.features && data.features.length > 0) {
                 let firstBuilding = data.features[0].geometry.coordinates[0][0];
-                map.setView([firstBuilding[1], firstBuilding[0]], map.getZoom(), { animate: false });
-                console.log("📍 Karte auf Gebäude zentriert.");
+                if (firstBuilding) {
+                    map.setView([firstBuilding[1], firstBuilding[0]], map.getZoom(), { animate: false });
+                    console.log("📍 Karte auf Gebäude zentriert.");
+                }
             }
         })
         .catch(error => console.error('❌ Fehler beim Laden der Gebäudedaten:', error));
@@ -52,7 +54,7 @@ map.on('zoomend', function() {
     loadBuildings(false);
 });
 
-// Layer: Features aus FastAPI laden
+// 7️⃣ **Layer für andere Geodaten laden**
 let featuresLayer = L.geoJSON(null, {
     onEachFeature: function (feature, layer) {
         let props = feature.properties;
@@ -63,10 +65,9 @@ let featuresLayer = L.geoJSON(null, {
 fetch('https://fastapi-heatbox.onrender.com/get_data')
   .then(response => response.json())
   .then(data => {
-      featuresLayer.addData(data).addTo(map);  // Hier: .addTo(map) hinzugefügt
+      featuresLayer.addData(data).addTo(map);
   });
 
-// Layer: Kommunen aus FastAPI laden
 let kommunenLayer = L.geoJSON(null, {
     onEachFeature: function (feature, layer) {
         let props = feature.properties;
@@ -83,10 +84,9 @@ let kommunenLayer = L.geoJSON(null, {
 fetch('https://fastapi-heatbox.onrender.com/get_kommunen')
   .then(response => response.json())
   .then(data => {
-      kommunenLayer.addData(data).addTo(map);  // Hier: .addTo(map) hinzugefügt
+      kommunenLayer.addData(data).addTo(map);
   });
 
-// Layer: Windenergieanlagen aus FastAPI laden
 let windenergieLayer = L.geoJSON(null, {
     onEachFeature: function (feature, layer) {
         let props = feature.properties;
@@ -101,65 +101,48 @@ let windenergieLayer = L.geoJSON(null, {
 fetch('https://fastapi-heatbox.onrender.com/get_windenergieanlagen')
   .then(response => response.json())
   .then(data => {
-      windenergieLayer.addData(data).addTo(map);  // Hier: .addTo(map) hinzugefügt
+      windenergieLayer.addData(data).addTo(map);
   });
-  
 
-
-// hier neue Daten hinzufügen ##########
-
-
-// Layer-Control für Overlay-Layer
+// 8️⃣ **Layer-Control für Overlay-Layer**
 let overlayMaps = {
     "Features": featuresLayer,
     "Kommunen": kommunenLayer,
     "Windenergieanlagen": windenergieLayer
 };
 
-// Layer-Control zur Karte hinzufügen
-L.control.layers(null, overlayMaps, {
-    collapsed: false  // Immer ausgeklappt
-}).addTo(map);
+L.control.layers(null, overlayMaps, { collapsed: false }).addTo(map);
 
-
-
-
-// Funktionen ######################
-
-
-
-// Layer für temporäre Features (X)
+// 9️⃣ **Simulationsfunktionen**
 let tempLayer = L.layerGroup().addTo(map);
 
-// Funktion zum Hinzufügen eines neuen temporären Features
 map.on('click', function (e) {
     let newFeature = L.circleMarker(e.latlng, { color: 'red', radius: 8 }).addTo(tempLayer);
-    simulateEffect(e.latlng); // Simulationsfunktion aufrufen
+    simulateEffect(e.latlng);
 });
 
-// Simulationsfunktion: Ändert Attribute der bestehenden Features
 function simulateEffect(position) {
     map.eachLayer(layer => {
         if (layer.feature && layer.feature.properties) {
             let distance = layer.getLatLng().distanceTo(position);
-            if (distance < 100) { // Falls innerhalb von 100m
-                layer.feature.properties.attribute += 1; // Erhöhe Attribut
+            if (distance < 100) {
+                layer.feature.properties.attribute += 1;
                 layer.bindPopup(`<b>${layer.feature.properties.name}</b><br>Attribute: ${layer.feature.properties.attribute}`).openPopup();
             }
         }
     });
 }
 
-// Reset-Button für Simulation
+// 🔄 Reset-Button
 let resetButton = L.control({ position: "topright" });
 resetButton.onAdd = function () {
     let div = L.DomUtil.create("div", "leaflet-bar leaflet-control leaflet-control-custom");
     div.innerHTML = '<button style="background:white; padding:5px; border:1px solid black;">Reset</button>';
     div.onclick = function () {
-        tempLayer.clearLayers(); // Entfernt alle temporären Features
+        tempLayer.clearLayers();
         map.eachLayer(layer => {
             if (layer.feature && layer.feature.properties) {
-                layer.feature.properties.attribute = 10; // Zurücksetzen auf Ursprungswert
+                layer.feature.properties.attribute = 10;
                 layer.bindPopup(`<b>${layer.feature.properties.name}</b><br>Attribute: ${layer.feature.properties.attribute}`);
             }
         });
