@@ -5,16 +5,17 @@ let map = L.map('map', {
     minZoom: 10,
     maxZoom: 19,
     scrollWheelZoom: true,
-    smoothWheelZoom: true,
+    smoothWheelZoom: false,
     smoothSensitivity: 1.3
 });
 
-// 2️⃣ Basis-Layer (Hintergrundkarte)
-let positronLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {
+// basemap 
+let darkMatterNoLabels = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}.png', {
     attribution: '© CartoDB',
     maxZoom: 19
 });
-positronLayer.addTo(map);
+darkMatterNoLabels.addTo(map);
+
 
 // 3️⃣ OSMBuildings-Instanz erstellen (nur einmal!)
 let osmb = new OSMBuildings(map).date(new Date());
