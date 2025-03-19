@@ -10,11 +10,12 @@ let map = L.map('map', {
 });
 
 // basemap 
-let alidadeSmooth = L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png', {
-    attribution: '© Stadia Maps',
-    maxZoom: 19
+let tonerLite = L.tileLayer('https://{s}.tile.stamen.com/toner-lite/{z}/{x}/{y}.png', {
+    attribution: '© Stamen Design',
+    maxZoom: 20
 });
-alidadeSmooth.addTo(map);
+tonerLite.addTo(map);
+
 
 
 
