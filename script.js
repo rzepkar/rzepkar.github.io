@@ -12,7 +12,7 @@ let map = L.map('map', {
 // basemap 
 let esriGrayCanvas = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
     attribution: '&copy; Esri, HERE, Garmin, OpenStreetMap contributors',
-	minZoom: 10
+	minZoom: 10,
     maxZoom: 19
 });
 esriGrayCanvas.addTo(map);
