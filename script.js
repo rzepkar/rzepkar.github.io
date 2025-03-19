@@ -10,11 +10,12 @@ let map = L.map('map', {
 });
 
 // basemap 
-let stamenTonerLite = L.tileLayer('https://stamen-tiles.a.ssl.fastly.net/toner-lite/{z}/{x}/{y}.png', {
-    attribution: '&copy; Stamen Design, OpenStreetMap contributors',
+let stadiaSmooth = L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png', {
+    attribution: '&copy; Stadia Maps, OpenStreetMap contributors',
     maxZoom: 20
 });
-stamenTonerLite.addTo(map);
+stadiaSmooth.addTo(map);
+
 
 
 
