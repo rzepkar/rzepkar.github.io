@@ -10,14 +10,11 @@ let map = L.map('map', {
 });
 
 // basemap 
-let customBasemap = L.esri.Vector.vectorTileLayer("12580bec1ef54ffb902256376df0a268", {
+let customBasemap = L.tileLayer("12580bec1ef54ffb902256376df0a268", {
+    attribution: '© Ihr Kartenanbieter',
+    maxZoom: 19
 });
 customBasemap.addTo(map);
-
-
-
-
-
 
 
 
