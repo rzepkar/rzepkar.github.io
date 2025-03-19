@@ -10,11 +10,11 @@ let map = L.map('map', {
 });
 
 // basemap 
-let customBasemap = L.tileLayer("12580bec1ef54ffb902256376df0a268", {
-    attribution: '© Ihr Kartenanbieter',
-    maxZoom: 19
+let stamenTonerLite = L.tileLayer('https://stamen-tiles.a.ssl.fastly.net/toner-lite/{z}/{x}/{y}.png', {
+    attribution: '&copy; Stamen Design, OpenStreetMap contributors',
+    maxZoom: 20
 });
-customBasemap.addTo(map);
+stamenTonerLite.addTo(map);
 
 
 
