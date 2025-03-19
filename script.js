@@ -10,11 +10,12 @@ let map = L.map('map', {
 });
 
 // basemap 
-let openTopoMap = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
-    attribution: '&copy; OpenTopoMap, OpenStreetMap contributors',
-    maxZoom: 17
+let esriGrayCanvas = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
+    attribution: '&copy; Esri, HERE, Garmin, OpenStreetMap contributors',
+    maxZoom: 16
 });
-openTopoMap.addTo(map);
+esriGrayCanvas.addTo(map);
+
 
 
 
