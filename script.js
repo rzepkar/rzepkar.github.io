@@ -10,11 +10,12 @@ let map = L.map('map', {
 });
 
 // basemap 
-let darkMatterNoLabels = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}.png', {
+let voyagerNoLabels = L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager_nolabels/{z}/{x}/{y}.png', {
     attribution: '© CartoDB',
     maxZoom: 19
 });
-darkMatterNoLabels.addTo(map);
+voyagerNoLabels.addTo(map);
+
 
 
 // 3️⃣ OSMBuildings-Instanz erstellen (nur einmal!)
