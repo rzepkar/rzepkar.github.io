@@ -10,12 +10,12 @@ let map = L.map('map', {
 });
 
 // basemap 
-let esriGrayCanvas = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
-    attribution: '&copy; Esri, HERE, Garmin, OpenStreetMap contributors',
-	minZoom: 10,
-    maxZoom: 19
+let cartoVoyagerNoLabels = L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager_nolabels/{z}/{x}/{y}{r}.png', {
+    attribution: '&copy; CartoDB, OpenStreetMap contributors',
+    maxZoom: 20
 });
-esriGrayCanvas.addTo(map);
+cartoVoyagerNoLabels.addTo(map);
+
 
 
 // 3️⃣ OSMBuildings-Instanz erstellen (nur einmal!)
