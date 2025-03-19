@@ -4,7 +4,7 @@ let map = L.map('map', {
     zoom: 13,
     minZoom: 10,
     maxZoom: 19,
-    scrollWheelZoom: false,
+    scrollWheelZoom: true,
     smoothWheelZoom: true,
     smoothSensitivity: 1.3
 });
@@ -18,6 +18,7 @@ positronLayer.addTo(map);
 
 // 3️⃣ OSMBuildings-Instanz erstellen (nur einmal!)
 let osmb = new OSMBuildings(map).date(new Date());
+console.log("🛠 OSMBuildings initialisiert:", osmb);
 
 // 4️⃣ **Funktion: Gebäude laden & anzeigen**
 function loadBuildings(initialLoad = false) {
@@ -26,16 +27,25 @@ function loadBuildings(initialLoad = false) {
         .then(data => {
             console.log("✅ Gebäude-Daten erfolgreich empfangen:", data);
 
+            if (!data.features || data.features.length === 0) {
+                console.warn("⚠️ Keine Gebäude-Daten vorhanden!");
+                return;
+            }
+
+            // **Höhenwerte prüfen**
+            let heights = data.features.map(f => f.properties.height);
+            console.log("🏗 Gebäudehöhen:", heights);
+
             // Gebäude aktualisieren
             osmb.set(data);
             console.log("🏗 Gebäude aktualisiert.");
 
             // **Nur beim ersten Laden die Karte auf das erste Gebäude setzen**
-            if (initialLoad && data.features && data.features.length > 0) {
+            if (initialLoad && data.features.length > 0) {
                 let firstBuilding = data.features[0].geometry.coordinates[0][0];
                 if (firstBuilding) {
+                    console.log("📍 Zentriere Karte auf:", firstBuilding);
                     map.setView([firstBuilding[1], firstBuilding[0]], map.getZoom(), { animate: false });
-                    console.log("📍 Karte auf Gebäude zentriert.");
                 }
             }
         })
@@ -50,7 +60,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
 // 6️⃣ **🔄 Gebäude bei Zoom-Änderung aktualisieren (ohne Zentrierung)**
 map.on('zoomend', function() {
-    console.log("🔍 Zoom geändert. Gebäude werden nur aktualisiert...");
+    console.log("🔍 Zoom geändert. Gebäude werden neu geladen...");
     loadBuildings(false);
 });
 
