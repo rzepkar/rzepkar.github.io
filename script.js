@@ -2,11 +2,11 @@
 let map = L.map('map', {
     center: [50.228320, 8.674393],  // Frankfurt am Main
     zoom: 13,
-	minZoom: 10,			//adjust
-	maxZoom: 19,			//adjust
-	scrollWheelZoom: false,	//default
-	smoothWheelZoom: true,	//plugin
-	smoothSensitivity: 1.3	//adjust
+    minZoom: 10,
+    maxZoom: 19,
+    scrollWheelZoom: false,
+    smoothWheelZoom: true,
+    smoothSensitivity: 1.3
 });
 
 // Basis-Layer (Hintergrundkarte)
@@ -15,6 +15,12 @@ let positronLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}
     maxZoom: 19
 });
 positronLayer.addTo(map);
+
+// OSMBuildings-Instanz erstellen
+let osmb = new OSMBuildings(map).date(new Date());
+
+
+
 
 
 
@@ -69,26 +75,18 @@ fetch('https://fastapi-heatbox.onrender.com/get_windenergieanlagen')
   .then(data => {
       windenergieLayer.addData(data).addTo(map);  // Hier: .addTo(map) hinzugefügt
   });
-
-let osmb;
-
-// Gebäude-Ladefunktion muss GLOBAL sein
-function loadBuildings(initialLoad = false) {
-    if (!osmb) {
-        console.warn("⚠️ osmb nicht initialisiert, erstelle neue Instanz.");
-        osmb = new OSMBuildings(map).date(new Date());
-    }
-
+  
+// Funktion zum Laden der Gebäudedaten
+function loadBuildings() {
     fetch('https://fastapi-heatbox.onrender.com/get_buildings')
         .then(response => response.json())
         .then(data => {
             console.log("✅ Gebäude-Daten erfolgreich empfangen:", data);
-
             osmb.set(data); // Gebäude aktualisieren
             console.log("🏗 Gebäude aktualisiert.");
 
-            // Nur beim ersten Laden zentrieren
-            if (initialLoad && data.features && data.features.length > 0) {
+            // Kamera auf erstes Gebäude setzen
+            if (data.features && data.features.length > 0) {
                 let firstBuilding = data.features[0].geometry.coordinates[0][0];
                 map.setView([firstBuilding[1], firstBuilding[0]], 18);
                 console.log("📍 Karte auf Gebäude zentriert.");
@@ -96,6 +94,9 @@ function loadBuildings(initialLoad = false) {
         })
         .catch(error => console.error('❌ Fehler beim Laden der Gebäudedaten:', error));
 }
+
+// Gebäude einmal initial laden
+loadBuildings();
 
 document.addEventListener("DOMContentLoaded", function() {
     console.log("🚀 Initialisiere Karte & lade Gebäude...");
