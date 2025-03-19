@@ -10,11 +10,12 @@ let map = L.map('map', {
 });
 
 // basemap 
-let cartoVoyagerNoLabels = L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager_nolabels/{z}/{x}/{y}{r}.png', {
-    attribution: '&copy; CartoDB, OpenStreetMap contributors',
-    maxZoom: 20
+let openTopoMap = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; OpenTopoMap, OpenStreetMap contributors',
+    maxZoom: 17
 });
-cartoVoyagerNoLabels.addTo(map);
+openTopoMap.addTo(map);
+
 
 
 
