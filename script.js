@@ -16,12 +16,8 @@ let positronLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}
 });
 positronLayer.addTo(map);
 
-// OSMBuildings-Instanz erstellen
+// OSMBuildings-Instanz erstellen (wird nur einmal erstellt)
 let osmb = new OSMBuildings(map).date(new Date());
-
-
-
-
 
 
 // Layer: Features aus FastAPI laden
@@ -76,8 +72,8 @@ fetch('https://fastapi-heatbox.onrender.com/get_windenergieanlagen')
       windenergieLayer.addData(data).addTo(map);  // Hier: .addTo(map) hinzugefügt
   });
   
-// Funktion zum Laden der Gebäudedaten
-function loadBuildings() {
+// 🔄 **Funktion zum Laden der Gebäudedaten**
+function loadBuildings(initialLoad = false) {
     fetch('https://fastapi-heatbox.onrender.com/get_buildings')
         .then(response => response.json())
         .then(data => {
@@ -85,31 +81,28 @@ function loadBuildings() {
             osmb.set(data); // Gebäude aktualisieren
             console.log("🏗 Gebäude aktualisiert.");
 
-            // Kamera auf erstes Gebäude setzen
-            if (data.features && data.features.length > 0) {
+            // **Nur beim ersten Laden die Karte auf das erste Gebäude setzen**
+            if (initialLoad && data.features && data.features.length > 0) {
                 let firstBuilding = data.features[0].geometry.coordinates[0][0];
-                map.setView([firstBuilding[1], firstBuilding[0]], 18);
+                map.setView([firstBuilding[1], firstBuilding[0]], map.getZoom()); // 🛠 **Setzt nur beim Start**
                 console.log("📍 Karte auf Gebäude zentriert.");
             }
         })
         .catch(error => console.error('❌ Fehler beim Laden der Gebäudedaten:', error));
 }
 
-// Gebäude einmal initial laden
-loadBuildings();
-
+// **🔄 Gebäude einmal initial laden (mit Zentrierung)**
 document.addEventListener("DOMContentLoaded", function() {
     console.log("🚀 Initialisiere Karte & lade Gebäude...");
-    
-    // Gebäude einmal initial laden
-    loadBuildings(true);
+    loadBuildings(true); // Nur einmal mit Zentrierung
 });
 
-// Gebäude bei jeder Zoom-Änderung erneut setzen
+// **👀 Gebäude bei Zoom-Änderung aktualisieren (ohne Zentrierung)**
 map.on('zoomend', function() {
-    console.log("🔍 Zoomstufe geändert. Gebäude werden neu geladen...");
-    loadBuildings(false);
+    console.log("🔍 Zoom geändert. Gebäude werden nur aktualisiert...");
+    loadBuildings(false); // **Daten nachladen, aber keine Zentrierung mehr!**
 });
+
 
 
 
