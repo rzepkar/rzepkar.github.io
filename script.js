@@ -10,11 +10,12 @@ let map = L.map('map', {
 });
 
 // basemap 
-let monochromeWhite = L.tileLayer('https://tiles.wmflabs.org/bw-mapnik/{z}/{x}/{y}.png', {
-    attribution: '© OpenStreetMap contributors',
+let customBasemap = L.tileLayer('https://fh-frankfurt.maps.arcgis.com/sharing/rest/content/items/12580bec1ef54ffb902256376df0a268/resources/styles/root.json?f=pjson', {
+    attribution: '© Ihr Kartenanbieter',
     maxZoom: 19
 });
-monochromeWhite.addTo(map);
+customBasemap.addTo(map);
+
 
 
 
