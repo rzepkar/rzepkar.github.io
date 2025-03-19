@@ -10,11 +10,12 @@ let map = L.map('map', {
 });
 
 // basemap 
-let tonerLite = L.tileLayer('https://{s}.tile.stamen.com/toner-lite/{z}/{x}/{y}.png', {
-    attribution: '© Stamen Design',
-    maxZoom: 20
+let monochromeWhite = L.tileLayer('https://tiles.wmflabs.org/bw-mapnik/{z}/{x}/{y}.png', {
+    attribution: '© OpenStreetMap contributors',
+    maxZoom: 19
 });
-tonerLite.addTo(map);
+monochromeWhite.addTo(map);
+
 
 
 
