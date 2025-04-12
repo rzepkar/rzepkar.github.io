@@ -170,7 +170,9 @@ def get_windenergieanlagen():
         print("Fehler in /get_windenergieanlagen:", e)
         return {"error": str(e)}
         
-
+@app.get("/mvt/test")
+def test():
+    return {"status": "online"}
 
 @app.get("/mvt/buildings/{z}/{x}/{y}")
 def get_mvt(z: int, x: int, y: int):
