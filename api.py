@@ -4,6 +4,7 @@ import json
 import os
 import urllib.parse
 from fastapi.middleware.cors import CORSMiddleware
+from starlette.responses import Response
 
 # FastAPI-Instanz erstellen
 app = FastAPI()
@@ -168,5 +169,46 @@ def get_windenergieanlagen():
     except Exception as e:
         print("Fehler in /get_windenergieanlagen:", e)
         return {"error": str(e)}
-        
+
+
+@app.get("/mvt/test")
+def test():
+    return {"status": "online"}
+
+@app.get("/mvt/buildings/{z}/{x}/{y}")
+def get_mvt(z: int, x: int, y: int):
+    conn = get_db_connection()
+    cur = conn.cursor()
+
+    sql = f"""
+    WITH
+    bounds AS (
+        SELECT ST_TileEnvelope({z}, {x}, {y}) AS geom
+    ),
+    mvtgeom AS (
+        SELECT
+            id,
+            name,
+            height,
+            ST_AsMVTGeom(
+                b.geom,
+                bounds.geom,
+                4096,
+                0,
+                true
+            ) AS geom
+        FROM buildings b, bounds
+        WHERE ST_Intersects(b.geom, bounds.geom)
+    )
+    SELECT ST_AsMVT(mvtgeom, 'buildings_layer', 4096, 'geom') FROM mvtgeom;
+    """
+
+    cur.execute(sql)
+    row = cur.fetchone()
+    cur.close()
+    conn.close()
+
+    # Sicherstellen, dass ein valides Tile-Objekt geliefert wird
+    return Response(content=row[0] if row and row[0] else b"", media_type="application/x-protobuf")
+
         
