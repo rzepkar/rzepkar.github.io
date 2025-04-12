@@ -174,7 +174,7 @@ def get_windenergieanlagen():
 
 # Vektor Tiles
 
-@app.get("buildings/mvt/{z}/{x}/{y}")
+@app.get("/mvt/buildings/{z}/{x}/{y}")
 def get_mvt(z: int, x: int, y: int):
     conn = get_db_connection()
     cur = conn.cursor()
