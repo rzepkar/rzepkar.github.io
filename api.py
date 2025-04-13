@@ -12,7 +12,7 @@ app = FastAPI()
 # CORS erlauben, damit Leaflet auf die API zugreifen kann
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Erlaubt Zugriff von allen Quellen
+    allow_origins=["https://rzepkar.github.io"], 
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
