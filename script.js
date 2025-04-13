@@ -116,11 +116,34 @@ fetch('https://fastapi-heatbox.onrender.com/get_windenergieanlagen')
       windenergieLayer.addData(data).addTo(map);
   });
 
+let buildingsVectorTiles = L.vectorGrid.protobuf(
+  'https://fastapi-heatbox.onrender.com/mvt/buildings/{z}/{x}/{y}', {
+    vectorTileLayerStyles: {
+      buildings_layer: {
+        fill: true,
+        fillColor: '#ff6600',
+        fillOpacity: 0.7,
+        color: '#cc3300',
+        weight: 1
+      }
+    },
+    interactive: true,
+    getFeatureId: function(f) {
+      return f.properties.id;
+    }
+  }
+);
+
+// Direkt zur Karte hinzufügen oder in die Layer-Control integrieren:
+buildingsVectorTiles.addTo(map);
+// Ende VectorTiles
+
 // 8️⃣ **Layer-Control für Overlay-Layer**
 let overlayMaps = {
     "Features": featuresLayer,
     "Kommunen": kommunenLayer,
-    "Windenergieanlagen": windenergieLayer
+    "Windenergieanlagen": windenergieLayer,
+	"Gebäude Vektor Tiles": buildingsVectorTiles
 };
 
 L.control.layers(null, overlayMaps, { collapsed: false }).addTo(map);
