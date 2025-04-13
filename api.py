@@ -68,6 +68,47 @@ def get_data():
     
     return {"type": "FeatureCollection", "features": features}
     
+    
+@app.get("/mvt/buildings/{z}/{x}/{y}")
+def get_mvt(z: int, x: int, y: int):
+    conn = get_db_connection()
+    cur = conn.cursor()
+
+    sql = f"""
+    WITH
+    bounds AS (
+        SELECT ST_TileEnvelope({z}, {x}, {y}) AS geom
+    ),
+    mvtgeom AS (
+        SELECT
+            id,
+            name,
+            height,
+            ST_AsMVTGeom(
+                b.geom_3857,
+                bounds.geom,
+                4096,
+                0,
+                true
+            ) AS geom
+        FROM buildings b, bounds
+        WHERE ST_Intersects(b.geom_3857, bounds.geom)
+    )
+    SELECT ST_AsMVT(mvtgeom, 'buildings_layer', 4096, 'geom') FROM mvtgeom;
+    """
+
+    cur.execute(sql)
+    row = cur.fetchone()
+    cur.close()
+    conn.close()
+
+    return Response(content=row[0], media_type="application/x-protobuf")
+
+
+    # Sicherstellen, dass ein valides Tile-Objekt geliefert wird
+    return Response(content=row[0] if row and row[0] else b"", media_type="application/x-protobuf")
+
+'''
 # GET: Tabelle buildings     
 @app.get("/get_buildings")
 def get_buildings():
@@ -89,7 +130,8 @@ def get_buildings():
     conn.close()
 
     return {"type": "FeatureCollection", "features": features}
-    
+'''
+
 # GET: Tabelle Kommunen mit Case-Sensitivity
 @app.get("/get_kommunen")
 def get_kommunen():
@@ -170,42 +212,4 @@ def get_windenergieanlagen():
         print("Fehler in /get_windenergieanlagen:", e)
         return {"error": str(e)}
    
-    
-@app.get("/mvt/buildings/{z}/{x}/{y}")
-def get_mvt(z: int, x: int, y: int):
-    conn = get_db_connection()
-    cur = conn.cursor()
-
-    sql = f"""
-    WITH
-    bounds AS (
-        SELECT ST_TileEnvelope({z}, {x}, {y}) AS geom
-    ),
-    mvtgeom AS (
-        SELECT
-            id,
-            name,
-            height,
-            ST_AsMVTGeom(
-                b.geom_3857,
-                bounds.geom,
-                4096,
-                0,
-                true
-            ) AS geom
-        FROM buildings b, bounds
-        WHERE ST_Intersects(b.geom_3857, bounds.geom)
-    )
-    SELECT ST_AsMVT(mvtgeom, 'buildings_layer', 4096, 'geom') FROM mvtgeom;
-    """
-
-    cur.execute(sql)
-    row = cur.fetchone()
-    cur.close()
-    conn.close()
-
-    return Response(content=row[0], media_type="application/x-protobuf")
-
-
-    # Sicherstellen, dass ein valides Tile-Objekt geliefert wird
-    return Response(content=row[0] if row and row[0] else b"", media_type="application/x-protobuf")
+ 
