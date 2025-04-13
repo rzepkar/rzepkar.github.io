@@ -69,6 +69,9 @@ def get_data():
     return {"type": "FeatureCollection", "features": features}
     
     
+
+
+    
 @app.get("/mvt/buildings/{z}/{x}/{y}")
 def get_mvt(z: int, x: int, y: int):
     conn = get_db_connection()
@@ -87,14 +90,14 @@ def get_mvt(z: int, x: int, y: int):
             ST_AsMVTGeom(
                 b.geom_3857,
                 bounds.geom,
-                4096,
+                256,
                 0,
                 true
             ) AS geom
         FROM buildings b, bounds
         WHERE ST_Intersects(b.geom_3857, bounds.geom)
     )
-    SELECT ST_AsMVT(mvtgeom, 'buildings_layer', 4096, 'geom') FROM mvtgeom;
+    SELECT ST_AsMVT(mvtgeom, 'buildings_layer', 256, 'geom') FROM mvtgeom;
     """
 
     cur.execute(sql)
