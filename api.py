@@ -4,6 +4,7 @@ import json
 import os
 import urllib.parse
 from fastapi.middleware.cors import CORSMiddleware
+from functools import lru_cache
 from starlette.responses import Response
 
 # FastAPI-Instanz erstellen
@@ -69,11 +70,12 @@ def get_data():
     return {"type": "FeatureCollection", "features": features}
     
     
+from functools import lru_cache
+from starlette.responses import Response
 
-
-    
-@app.get("/mvt/buildings/{z}/{x}/{y}")
-def get_mvt(z: int, x: int, y: int):
+# Caching-Funktion
+@lru_cache(maxsize=512)  # bis zu 512 Tiles im Cache
+def get_cached_tile(z: int, x: int, y: int) -> bytes:
     conn = get_db_connection()
     cur = conn.cursor()
 
@@ -88,26 +90,27 @@ def get_mvt(z: int, x: int, y: int):
             name,
             height,
             ST_AsMVTGeom(
-                ST_Simplify(b.geom_3857, 10), 
-                b.geom_3857,
                 bounds.geom,
-                256,
+                4096,
                 0,
                 true
             ) AS geom
         FROM buildings b, bounds
         WHERE ST_Intersects(b.geom_3857, bounds.geom)
     )
-    SELECT ST_AsMVT(mvtgeom, 'buildings_layer', 256, 'geom') FROM mvtgeom;
+    SELECT ST_AsMVT(mvtgeom, 'buildings_layer', 4096, 'geom') FROM mvtgeom;
     """
-
     cur.execute(sql)
     row = cur.fetchone()
     cur.close()
     conn.close()
-
-    return Response(content=row[0], media_type="application/x-protobuf")
-
+    return row[0] if row and row[0] else b''
+    
+    
+@app.get("/mvt/buildings/{z}/{x}/{y}")
+def get_mvt(z: int, x: int, y: int):
+    tile = get_cached_tile(z, x, y)
+    return Response(content=tile, media_type="application/x-protobuf")
 
     # Sicherstellen, dass ein valides Tile-Objekt geliefert wird
     return Response(content=row[0] if row and row[0] else b"", media_type="application/x-protobuf")
