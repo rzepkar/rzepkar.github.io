@@ -1,6 +1,6 @@
 // 1️⃣ Leaflet-Karte initialisieren
 let map = L.map('map', {
-    center: [50.228320, 8.674393],  // Frankfurt am Main
+    center: [50.161505, 8.528824],  // Frankfurt am Main
     zoom: 13,
     minZoom: 10,
     maxZoom: 19,
