@@ -90,6 +90,7 @@ def get_cached_tile(z: int, x: int, y: int) -> bytes:
             name,
             height,
             ST_AsMVTGeom(
+                b.geom_3857,
                 bounds.geom,
                 4096,
                 0,
