@@ -88,6 +88,7 @@ def get_mvt(z: int, x: int, y: int):
             name,
             height,
             ST_AsMVTGeom(
+                ST_Simplify(b.geom_3857, 10), 
                 b.geom_3857,
                 bounds.geom,
                 256,
