@@ -19,9 +19,9 @@ cartoVoyagerNoLabels.addTo(map);
 
 let rasterTiles = L.tileLayer('https://rzepkar.github.io/tiles/{z}/{x}/{y}.png', {
     tileSize: 256,
-    maxZoom: 19,
+    maxZoom: 17,
     minZoom: 10,
-    attribution: '© Deine Quelle'
+    attribution: '© HVGB'
 }).addTo(map);
 
 
