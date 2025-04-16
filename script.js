@@ -16,13 +16,15 @@ let cartoVoyagerNoLabels = L.tileLayer('https://{s}.basemaps.cartocdn.com/raster
 });
 cartoVoyagerNoLabels.addTo(map);
 
-L.tileLayer('https://github.com/rzepkar/tiles{z}/{x}/{y}.png', {
-  tileSize: 256,
-  maxZoom: 18,
-  opacity: 1,
-  attribution: '© Dein Name',
-  transparent: true
+
+let rasterTiles = L.tileLayer('https://rzepkar.github.io/tiles/{z}/{x}/{y}.png', {
+    tileSize: 256,
+    maxZoom: 18,
+    minZoom: 10,
+    attribution: '© HVBG',
+    opacity: 0.9
 }).addTo(map);
+
 
 
 // 3️⃣ OSMBuildings-Instanz erstellen (nur einmal!)
