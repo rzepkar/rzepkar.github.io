@@ -60,7 +60,7 @@ console.log("🛠 OSMBuildings initialisiert:", osmb); */
             }
         })
         .catch(error => console.error('❌ Fehler beim Laden der Gebäudedaten:', error));
-} */
+} 
 
 // 5️⃣ **👀 Gebäude einmal initial laden (mit Zentrierung)**
 document.addEventListener("DOMContentLoaded", function() {
@@ -72,7 +72,7 @@ document.addEventListener("DOMContentLoaded", function() {
 map.on('zoomend', function() {
     console.log("🔍 Zoom geändert. Gebäude werden neu geladen...");
     loadBuildings(false);
-});
+});*/
 
 // 7️⃣ **Layer für andere Geodaten laden**
 let featuresLayer = L.geoJSON(null, {
