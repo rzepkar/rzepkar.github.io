@@ -19,20 +19,19 @@ cartoVoyagerNoLabels.addTo(map);
 
 let rasterTiles = L.tileLayer('https://rzepkar.github.io/tiles/{z}/{x}/{y}.png', {
     tileSize: 256,
-    maxZoom: 18,
+    maxZoom: 19,
     minZoom: 10,
-    attribution: '© HVBG',
-    opacity: 0.9
+    attribution: '© Deine Quelle'
 }).addTo(map);
 
 
 
-// 3️⃣ OSMBuildings-Instanz erstellen (nur einmal!)
+/* // 3️⃣ OSMBuildings-Instanz erstellen (nur einmal!)
 let osmb = new OSMBuildings(map).date(new Date());
-console.log("🛠 OSMBuildings initialisiert:", osmb);
+console.log("🛠 OSMBuildings initialisiert:", osmb); */
 
 // 4️⃣ **Funktion: Gebäude laden & anzeigen**
-function loadBuildings(initialLoad = false) {
+/* function loadBuildings(initialLoad = false) {
     fetch('https://fastapi-heatbox.onrender.com/get_buildings')
         .then(response => response.json())
         .then(data => {
@@ -61,7 +60,7 @@ function loadBuildings(initialLoad = false) {
             }
         })
         .catch(error => console.error('❌ Fehler beim Laden der Gebäudedaten:', error));
-}
+} */
 
 // 5️⃣ **👀 Gebäude einmal initial laden (mit Zentrierung)**
 document.addEventListener("DOMContentLoaded", function() {
@@ -125,7 +124,7 @@ fetch('https://fastapi-heatbox.onrender.com/get_windenergieanlagen')
       windenergieLayer.addData(data).addTo(map);
   });
 
-let buildingsVectorTiles = L.vectorGrid.protobuf(
+/* let buildingsVectorTiles = L.vectorGrid.protobuf(
   'https://fastapi-heatbox.onrender.com/mvt/buildings/{z}/{x}/{y}', {
     vectorTileLayerStyles: {
       buildings_layer: {
@@ -141,7 +140,7 @@ let buildingsVectorTiles = L.vectorGrid.protobuf(
       return f.properties.id;
     }
   }
-);
+); */
 
 // Direkt zur Karte hinzufügen oder in die Layer-Control integrieren:
 buildingsVectorTiles.addTo(map);
