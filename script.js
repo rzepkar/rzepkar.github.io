@@ -140,11 +140,12 @@ fetch('https://fastapi-heatbox.onrender.com/get_windenergieanlagen')
       return f.properties.id;
     }
   }
-); */
+); 
 
 // Direkt zur Karte hinzufügen oder in die Layer-Control integrieren:
 buildingsVectorTiles.addTo(map);
 // Ende VectorTiles
+*/
 
 // 8️⃣ **Layer-Control für Overlay-Layer**
 let overlayMaps = {
