@@ -78,9 +78,16 @@ map.on('zoomend', function() {
 let featuresLayer = L.geoJSON(null, {
     onEachFeature: function (feature, layer) {
         let props = feature.properties;
-        layer.bindPopup(`<b>${props.name}</b><br>Info: ${props.info}`);
-    }
-});
+		layer.bindPopup(`
+			<div style="font-family: sans-serif; font-size: 14px;">
+				<h4 style="margin-bottom: 6px;">${props.name}</h4>
+				<table>
+					<tr><td><strong>Typ:</strong></td><td>${props.anlage}</td></tr>
+					<tr><td><strong>Leistung:</strong></td><td>${props.leistung} kW</td></tr>
+					<tr><td><strong>Träger:</strong></td><td>${props.energietraeger}</td></tr>
+				</table>
+			</div>
+`);
 
 fetch('https://fastapi-heatbox.onrender.com/get_data')
   .then(response => response.json())
@@ -214,9 +221,10 @@ buildingsVectorTiles.addTo(map);
 
 // 8️⃣ **Layer-Control für Overlay-Layer**
 let overlayMaps = {
-    "Features": featuresLayer,
-    "Kommunen": kommunenLayer,
-    "Energieanlagen": energieanlagenLayer
+    "<strong> Thematische Layergruppe</strong>": {},
+	"Features": featuresLayer,
+    "Energieanlagen": energieanlagenLayer,
+	"Kommunen": kommunenLayer
 };
 
 L.control.layers(null, overlayMaps, { collapsed: false }).addTo(map);
