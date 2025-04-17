@@ -87,7 +87,9 @@ let featuresLayer = L.geoJSON(null, {
 					<tr><td><strong>Träger:</strong></td><td>${props.energietraeger}</td></tr>
 				</table>
 			</div>
-`);
+        `);
+    }
+});
 
 fetch('https://fastapi-heatbox.onrender.com/get_data')
   .then(response => response.json())
@@ -220,11 +222,15 @@ buildingsVectorTiles.addTo(map);
 */
 
 // 8️⃣ **Layer-Control für Overlay-Layer**
+let dummyLabel1 = L.layerGroup();  // Dummy-Layer ohne Inhalt
+let dummyLabel2 = L.layerGroup();
+
 let overlayMaps = {
-    "<strong> Thematische Layergruppe</strong>": {},
-	"Features": featuresLayer,
+    '<span style="font-weight:bold; font-size: 14px;">🌍 Thematische Daten</span>': dummyLabel1,
+    "Features": featuresLayer,
     "Energieanlagen": energieanlagenLayer,
-	"Kommunen": kommunenLayer
+    '<span style="font-weight:bold; font-size: 14px;">🧭 Verwaltungsgrenzen</span>': dummyLabel2,
+    "Kommunen": kommunenLayer
 };
 
 L.control.layers(null, overlayMaps, { collapsed: false }).addTo(map);
