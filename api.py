@@ -244,7 +244,7 @@ def get_energieanlagen():
                     "leistung": row[3],
                     "energietraeger": row[4],
                 },
-                "geometry": json.loads(row[3])
+                "geometry": json.loads(row[5])
             }
             features.append(feature)
         
