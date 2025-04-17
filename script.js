@@ -164,9 +164,10 @@ fetch('https://fastapi-heatbox.onrender.com/get_windenergieanlagen')
   });
 
 
+// 8️⃣ Layer-Control (groupedLayerControl)
 let baseLayers = {
     "🌤 Helle Karte": cartoVoyagerNoLabels,
-	"🌤 Helle Karte Gebäude": rasterTiles,
+    "🌤 Helle Karte Gebäude": rasterTiles,
     "🌙 Dunkle Karte": darkNoLabels
 };
 
@@ -181,6 +182,7 @@ let groupedOverlays = {
 };
 
 L.control.groupedLayers(groupedOverlays, baseLayers, { collapsed: false }).addTo(map);
+
 
 
 // 9️⃣ **Simulationsfunktionen**
