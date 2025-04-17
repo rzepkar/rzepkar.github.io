@@ -208,7 +208,7 @@ buildingsVectorTiles.addTo(map);
 let overlayMaps = {
     "Features": featuresLayer,
     "Kommunen": kommunenLayer,
-    "Windenergieanlagen": windenergieLayer
+    "Energieanlagen": energieanlagenLayer
 };
 
 L.control.layers(null, overlayMaps, { collapsed: false }).addTo(map);
