@@ -175,7 +175,7 @@ let groupedOverlays = {
     }
 };
 
-L.control.groupedLayers(baseLayers, groupedOverlays, { collapsed: false }).addTo(map);
+L.control.groupedLayers(groupedOverlays, baseLayers, { collapsed: false }).addTo(map);
 
 
 // 9️⃣ **Simulationsfunktionen**
