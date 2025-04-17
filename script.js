@@ -162,7 +162,7 @@ fetch('https://fastapi-heatbox.onrender.com/get_windenergieanlagen')
 // --- Gruppierte Layer-Control mit Plugin
 let baseLayers = {
     "Basemap": cartoVoyagerNoLabels,
-    "HVGB Raster": rasterTiles
+    "Basemap Gebäude": rasterTiles
 };
 
 let groupedOverlays = {
