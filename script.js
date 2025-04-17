@@ -20,9 +20,6 @@ let darkNoLabels = L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/da
     maxZoom: 20
 });
 
-
-
-
 let rasterTiles = L.tileLayer('https://rzepkar.github.io/tiles/{z}/{x}/{y}.png', {
     tileSize: 256,
     maxZoom: 17,
