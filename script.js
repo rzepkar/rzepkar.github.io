@@ -9,7 +9,7 @@ let map = L.map('map', {
     smoothSensitivity: 1.3
 });
 
-// Basemap
+// Basemaps
 let cartoVoyagerNoLabels = L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager_nolabels/{z}/{x}/{y}{r}.png', {
     attribution: '&copy; CartoDB, OpenStreetMap contributors',
     maxZoom: 20
@@ -114,10 +114,10 @@ fetch('https://fastapi-heatbox.onrender.com/get_energieanlagen')
 let kommunenLayer = L.geoJSON(null, {
     style: function(feature) {
         return{
-			color: "#3366cc",         // Mittelhelles Blau für Linien
-			weight: 2,                // Etwas dickere Umrandung
-			fillColor: "#3366cc",     // Gleiche Farbe wie Linie
-			fillOpacity: 0            // Komplett durchsichtig
+            color: "#3366cc",
+            weight: 2,
+            fillColor: "#3366cc",
+            fillOpacity: 0
         };
     },
     onEachFeature: function (feature, layer) {
@@ -163,8 +163,7 @@ fetch('https://fastapi-heatbox.onrender.com/get_windenergieanlagen')
       windenergieLayer.addData(data).addTo(map);
   });
 
-
-// 8️⃣ Layer-Control (groupedLayerControl)
+// 8️⃣ Layer-Control (gefixt für groupedLayerControl)
 let baseLayers = {
     "🌤 Helle Karte": cartoVoyagerNoLabels,
     "🌤 Helle Karte Gebäude": rasterTiles,
@@ -181,9 +180,8 @@ let groupedOverlays = {
     }
 };
 
-L.control.groupedLayers(groupedOverlays, baseLayers, { collapsed: false }).addTo(map);
-
-
+// Fix: group layers kommt als erstes Argument, base layers als zweites!
+L.control.groupedLayers(baseLayers, groupedOverlays, { collapsed: false }).addTo(map);
 
 // 9️⃣ **Simulationsfunktionen**
 let tempLayer = L.layerGroup().addTo(map);
