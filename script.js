@@ -3,7 +3,7 @@ let map = L.map('map', {
     center: [50.161505, 8.528824],  // Frankfurt am Main
     zoom: 14,
     minZoom: 10,
-    maxZoom: 19,
+    maxZoom: 17,
     scrollWheelZoom: true,
     smoothWheelZoom: false,
     smoothSensitivity: 1.3
@@ -88,17 +88,17 @@ let energieanlagenLayer = L.geoJSON(null, {
 
 function getUnicodeSymbol(anlage) {
     switch (anlage) {
-        case "Freiflächen-Solaranlagen": return "☀️";
-        case "Windenergieanlagen": return "🌬️";
-        case "Wasserkraftwerke": return "💧";
+        case "Freiflächen-Solaranlage": return "☀️";
+        case "Windenergieanlagn": return "🌬️";
+        case "Wasserkraftwerk": return "💧";
         case "Geothermische Anlage": return "🌋";
-        case "Bioenergieanlagen": return "🌱";
-        case "Klär- und Deponiegasanlagen": return "🧪";
-        case "Abfallverbrennungsanlagen": return "🗑️";
+        case "Bioenergieanlage": return "🌱";
+        case "Klär- oder Deponiegasanlage": return "🧪";
+        case "Abfallverbrennungsanlage": return "🗑️";
         case "Fossiles Heizkraftwerk": return "🏣";
-        case "Fossile Kraftwerke": return "📂";
-        case "Fossile Heizwerke": return "🔥";
-        case "Sonstige fossile Feuerungsanlagen": return "⛽";
+        case "Fossiles Kraftwerk": return "📂";
+        case "Fossiles Heizwerk": return "🔥";
+        case "Sonstige fossile Feuerungsanlage": return "⛽";
         case "Blockheizkraftwerk": return "⚙️";
         default: return "❓";
     }
@@ -165,9 +165,9 @@ fetch('https://fastapi-heatbox.onrender.com/get_windenergieanlagen')
 
 // 8️⃣ Layer-Control (gefixt für groupedLayerControl)
 let baseLayers = {
-    "🌤 Helle Karte": cartoVoyagerNoLabels,
-    "🌤 Helle Karte Gebäude": rasterTiles,
-    "🌙 Dunkle Karte": darkNoLabels
+    "Helle Karte": cartoVoyagerNoLabels,
+    "Helle Karte mit Bebauung": rasterTiles,
+    "Dunkle Karte": darkNoLabels
 };
 
 let groupedOverlays = {
