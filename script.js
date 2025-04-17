@@ -110,10 +110,10 @@ fetch('https://fastapi-heatbox.onrender.com/get_energieanlagen')
 let kommunenLayer = L.geoJSON(null, {
     style: function(feature) {
         return{
-            color: "#666",
-            weight: 1,
-            fillColor: "#dddddd",
-            fillOpacity: 0.3
+			color: "#3366cc",         // Mittelhelles Blau für Linien
+			weight: 2,                // Etwas dickere Umrandung
+			fillColor: "#3366cc",     // Gleiche Farbe wie Linie
+			fillOpacity: 0            // Komplett durchsichtig
         };
     },
     onEachFeature: function (feature, layer) {
