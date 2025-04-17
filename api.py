@@ -229,7 +229,7 @@ def get_energieanlagen():
         # Anführungszeichen und Großbuchstaben beachten
         cur.execute("""
             SELECT 
-                id, name, leistung, ST_AsGeoJSON(geom) 
+                id, name, anlage, leistung, energietraeger, ST_AsGeoJSON(geom) 
             FROM "energieanlagen";
         """)
         features = []
