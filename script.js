@@ -10,11 +10,18 @@ let map = L.map('map', {
 });
 
 // Basemap
-let cartoVoyagerNoLabels = L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/dark_nolabels/{z}/{x}/{y}{r}.png', {
+let cartoVoyagerNoLabels = L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager_nolabels/{z}/{x}/{y}{r}.png', {
     attribution: '&copy; CartoDB, OpenStreetMap contributors',
     maxZoom: 20
 });
-cartoVoyagerNoLabels.addTo(map);
+
+let darkNoLabels = L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/dark_nolabels/{z}/{x}/{y}{r}.png', {
+    attribution: '&copy; CartoDB, OpenStreetMap contributors',
+    maxZoom: 20
+});
+
+
+
 
 let rasterTiles = L.tileLayer('https://rzepkar.github.io/tiles/{z}/{x}/{y}.png', {
     tileSize: 256,
@@ -159,10 +166,11 @@ fetch('https://fastapi-heatbox.onrender.com/get_windenergieanlagen')
       windenergieLayer.addData(data).addTo(map);
   });
 
-// --- Gruppierte Layer-Control mit Plugin
+
 let baseLayers = {
-    "Basemap": cartoVoyagerNoLabels,
-    "Basemap Gebäude": rasterTiles
+    "🌤 Helle Karte": cartoVoyagerNoLabels,
+	"🌤 Helle Karte Gebäude": rasterTiles,
+    "🌙 Dunkle Karte": darkNoLabels
 };
 
 let groupedOverlays = {
