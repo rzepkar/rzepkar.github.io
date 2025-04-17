@@ -35,7 +35,4 @@ html, body { margin: 0; padding: 0; height: 100%; }
     color: #007bff;
 }
 
-<!-- CSS für Grouped Layer Control -->
-<link rel="stylesheet" href="https://unpkg.com/leaflet.groupedlayercontrol/dist/leaflet.groupedlayercontrol.min.css" />
-<!-- JS für Grouped Layer Control -->
-<script src="https://unpkg.com/leaflet.groupedlayercontrol/dist/leaflet.groupedlayercontrol.min.js"></script>
+
