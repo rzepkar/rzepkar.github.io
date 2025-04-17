@@ -9,13 +9,12 @@ let map = L.map('map', {
     smoothSensitivity: 1.3
 });
 
-// basemap 
+// Basemap
 let cartoVoyagerNoLabels = L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager_nolabels/{z}/{x}/{y}{r}.png', {
     attribution: '&copy; CartoDB, OpenStreetMap contributors',
     maxZoom: 20
 });
 cartoVoyagerNoLabels.addTo(map);
-
 
 let rasterTiles = L.tileLayer('https://rzepkar.github.io/tiles/{z}/{x}/{y}.png', {
     tileSize: 256,
@@ -24,69 +23,15 @@ let rasterTiles = L.tileLayer('https://rzepkar.github.io/tiles/{z}/{x}/{y}.png',
     attribution: '© HVGB'
 }).addTo(map);
 
-
-
-/* // 3️⃣ OSMBuildings-Instanz erstellen (nur einmal!)
-let osmb = new OSMBuildings(map).date(new Date());
-console.log("🛠 OSMBuildings initialisiert:", osmb); */
-
-// 4️⃣ **Funktion: Gebäude laden & anzeigen**
-/* function loadBuildings(initialLoad = false) {
-    fetch('https://fastapi-heatbox.onrender.com/get_buildings')
-        .then(response => response.json())
-        .then(data => {
-            console.log("✅ Gebäude-Daten erfolgreich empfangen:", data);
-
-            if (!data.features || data.features.length === 0) {
-                console.warn("⚠️ Keine Gebäude-Daten vorhanden!");
-                return;
-            }
-
-            // **Höhenwerte prüfen**
-            let heights = data.features.map(f => f.properties.height);
-            console.log("🏗 Gebäudehöhen:", heights);
-
-            // Gebäude aktualisieren
-            osmb.set(data);
-            console.log("🏗 Gebäude aktualisiert.");
-
-            // **Nur beim ersten Laden die Karte auf das erste Gebäude setzen**
-            if (initialLoad && data.features.length > 0) {
-                let firstBuilding = data.features[0].geometry.coordinates[0][0];
-                if (firstBuilding) {
-                    console.log("📍 Zentriere Karte auf:", firstBuilding);
-                    map.setView([firstBuilding[1], firstBuilding[0]], map.getZoom(), { animate: false });
-                }
-            }
-        })
-        .catch(error => console.error('❌ Fehler beim Laden der Gebäudedaten:', error));
-} 
-
-// 5️⃣ **👀 Gebäude einmal initial laden (mit Zentrierung)**
-document.addEventListener("DOMContentLoaded", function() {
-    console.log("🚀 Initialisiere Karte & lade Gebäude...");
-    loadBuildings(true);
-});
-
-// 6️⃣ **🔄 Gebäude bei Zoom-Änderung aktualisieren (ohne Zentrierung)**
-map.on('zoomend', function() {
-    console.log("🔍 Zoom geändert. Gebäude werden neu geladen...");
-    loadBuildings(false);
-});*/
-
-// Features
+// --- Features Layer (mit einfachen Popups, weil "anlage" & Co. nicht garantiert)
 let featuresLayer = L.geoJSON(null, {
     onEachFeature: function (feature, layer) {
         let props = feature.properties;
-		layer.bindPopup(`
-			<div style="font-family: sans-serif; font-size: 14px;">
-				<h4 style="margin-bottom: 6px;">${props.name}</h4>
-				<table>
-					<tr><td><strong>Typ:</strong></td><td>${props.anlage}</td></tr>
-					<tr><td><strong>Leistung:</strong></td><td>${props.leistung} kW</td></tr>
-					<tr><td><strong>Träger:</strong></td><td>${props.energietraeger}</td></tr>
-				</table>
-			</div>
+        layer.bindPopup(`
+            <div style="font-family: sans-serif; font-size: 14px;">
+                <h4 style="margin-bottom: 6px;">${props.name}</h4>
+                <p>${props.info || ""}</p>
+            </div>
         `);
     }
 });
@@ -97,7 +42,7 @@ fetch('https://fastapi-heatbox.onrender.com/get_data')
       featuresLayer.addData(data).addTo(map);
   });
 
-// Energieanlagen
+// --- Energieanlagen Layer (mit Unicode-Symbolen)
 let energieanlagenLayer = L.geoJSON(null, {
     pointToLayer: function (feature, latlng) {
         return L.marker(latlng, {
@@ -123,7 +68,17 @@ let energieanlagenLayer = L.geoJSON(null, {
         });
     },
     onEachFeature: function (feature, layer) {
-        layer.bindPopup(`<b>${feature.properties.name}</b><br>Typ: ${feature.properties.anlage}`);
+        let props = feature.properties;
+        layer.bindPopup(`
+            <div style="font-family: sans-serif; font-size: 14px;">
+                <h4>${props.name}</h4>
+                <table>
+                    <tr><td><strong>Typ:</strong></td><td>${props.anlage || ""}</td></tr>
+                    <tr><td><strong>Leistung:</strong></td><td>${props.leistung || ""}</td></tr>
+                    <tr><td><strong>Träger:</strong></td><td>${props.energietraeger || ""}</td></tr>
+                </table>
+            </div>
+        `);
     }
 });
 
@@ -151,26 +106,28 @@ fetch('https://fastapi-heatbox.onrender.com/get_energieanlagen')
       energieanlagenLayer.addData(data).addTo(map);
   });
 
-
- 
-// Kommunen
+// --- Kommunen Layer (mit eigenem Style)
 let kommunenLayer = L.geoJSON(null, {
-	style: function(feature) {
-		return{
-			color: "#666",
-			weight: 1,
-			fillColor: "#dddddd",
-			fillOpacity: 0.3
-		};
-	},
+    style: function(feature) {
+        return{
+            color: "#666",
+            weight: 1,
+            fillColor: "#dddddd",
+            fillOpacity: 0.3
+        };
+    },
     onEachFeature: function (feature, layer) {
         let props = feature.properties;
         layer.bindPopup(`
-            <b>${props.gen}</b><br>
-            Bezirk: ${props.bez}<br>
-            AGS: ${props.ags}<br>
-            Bevölkerung: ${props.population}<br>
-            Verfahren: ${props.verfahren}
+            <div style="font-family: sans-serif; font-size: 14px;">
+                <h4>${props.gen}</h4>
+                <table>
+                    <tr><td><strong>Bezirk:</strong></td><td>${props.bez || ""}</td></tr>
+                    <tr><td><strong>AGS:</strong></td><td>${props.ags || ""}</td></tr>
+                    <tr><td><strong>Bevölkerung:</strong></td><td>${props.population || ""}</td></tr>
+                    <tr><td><strong>Verfahren:</strong></td><td>${props.verfahren || ""}</td></tr>
+                </table>
+            </div>
         `);
     }
 });
@@ -181,13 +138,17 @@ fetch('https://fastapi-heatbox.onrender.com/get_kommunen')
       kommunenLayer.addData(data).addTo(map);
   });
 
+// --- Windenergieanlagen Layer (als Beispiel, Standardpopup)
 let windenergieLayer = L.geoJSON(null, {
     onEachFeature: function (feature, layer) {
         let props = feature.properties;
         layer.bindPopup(`
-            <b>${props.name}</b><br>
-            Name: ${props.name}<br>
-            Leistung: ${props.leistung}
+            <div style="font-family: sans-serif; font-size: 14px;">
+                <h4>${props.name}</h4>
+                <table>
+                    <tr><td><strong>Leistung:</strong></td><td>${props.leistung || ""}</td></tr>
+                </table>
+            </div>
         `);
     }
 });
@@ -198,42 +159,24 @@ fetch('https://fastapi-heatbox.onrender.com/get_windenergieanlagen')
       windenergieLayer.addData(data).addTo(map);
   });
 
-/* let buildingsVectorTiles = L.vectorGrid.protobuf(
-  'https://fastapi-heatbox.onrender.com/mvt/buildings/{z}/{x}/{y}', {
-    vectorTileLayerStyles: {
-      buildings_layer: {
-        fill: true,
-        fillColor: '#ff6600',
-        fillOpacity: 0.7,
-        color: '#cc3300',
-        weight: 1
-      }
-    },
-    interactive: true,
-    getFeatureId: function(f) {
-      return f.properties.id;
-    }
-  }
-); 
-
-// Direkt zur Karte hinzufügen oder in die Layer-Control integrieren:
-buildingsVectorTiles.addTo(map);
-// Ende VectorTiles
-*/
+// --- Dummy-Gruppen für Layer-Control
+let dummyLabel1 = L.layerGroup([]);
+let dummyLabel2 = L.layerGroup([]);
 
 // 8️⃣ **Layer-Control für Overlay-Layer**
-let dummyLabel1 = L.layerGroup();  // Dummy-Layer ohne Inhalt
-let dummyLabel2 = L.layerGroup();
-
 let overlayMaps = {
-    '<span style="font-weight:bold; font-size: 14px;">🌍 Thematische Daten</span>': dummyLabel1,
+    '<span style="font-weight:bold; font-size: 14px; color:#555;">🌍 Thematische Daten</span>': dummyLabel1,
     "Features": featuresLayer,
     "Energieanlagen": energieanlagenLayer,
-    '<span style="font-weight:bold; font-size: 14px;">🧭 Verwaltungsgrenzen</span>': dummyLabel2,
+    '<span style="font-weight:bold; font-size: 14px; color:#555;">🧭 Verwaltungsgrenzen</span>': dummyLabel2,
     "Kommunen": kommunenLayer
 };
 
-L.control.layers(null, overlayMaps, { collapsed: false }).addTo(map);
+let control = L.control.layers(null, overlayMaps, { collapsed: false }).addTo(map);
+
+// Dummy-Layer direkt nach Erzeugen ausblenden
+map.removeLayer(dummyLabel1);
+map.removeLayer(dummyLabel2);
 
 // 9️⃣ **Simulationsfunktionen**
 let tempLayer = L.layerGroup().addTo(map);
