@@ -74,7 +74,7 @@ map.on('zoomend', function() {
     loadBuildings(false);
 });*/
 
-// 7️⃣ **Layer für andere Geodaten laden**
+// Features
 let featuresLayer = L.geoJSON(null, {
     onEachFeature: function (feature, layer) {
         let props = feature.properties;
@@ -88,6 +88,63 @@ fetch('https://fastapi-heatbox.onrender.com/get_data')
       featuresLayer.addData(data).addTo(map);
   });
 
+// Energieanlagen
+let energieanlagenLayer = L.geoJSON(null, {
+    pointToLayer: function (feature, latlng) {
+        return L.marker(latlng, {
+            icon: L.divIcon({
+                html: `
+                    <div style="
+                        width: 32px;
+                        height: 32px;
+                        background: white;
+                        border-radius: 50%;
+                        border: 1.5px solid #444;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        font-size: 18px;
+                    ">
+                        ${getUnicodeSymbol(feature.properties.anlage)}
+                    </div>
+                `,
+                className: '',
+                iconSize: [32, 32]
+            })
+        });
+    },
+    onEachFeature: function (feature, layer) {
+        layer.bindPopup(`<b>${feature.properties.name}</b><br>Typ: ${feature.properties.anlage}`);
+    }
+});
+
+function getUnicodeSymbol(anlage) {
+    switch (anlage) {
+        case "Freiflächen-Solaranlagen": return "☀️";
+        case "Windenergieanlagen": return "🌬️";
+        case "Wasserkraftwerke": return "💧";
+        case "Geothermische Anlage": return "🌋";
+        case "Bioenergieanlagen": return "🌱";
+        case "Klär- und Deponiegasanlagen": return "🧪";
+        case "Abfallverbrennungsanlagen": return "🗑️";
+        case "Fossiles Heizkraftwerk": return "🏭";
+        case "Fossile Kraftwerke": return "🛢️";
+        case "Fossile Heizwerke": return "🔥";
+        case "Sonstige fossile Feuerungsanlagen": return "⛽";
+        case "Blockheizkraftwerk": return "⚙️";
+        default: return "❓";
+    }
+}
+
+fetch('https://fastapi-heatbox.onrender.com/get_energieanlagen')
+  .then(response => response.json())
+  .then(data => {
+      energieanlagenLayer.addData(data).addTo(map);
+  });
+
+
+ 
+// Kommunen
 let kommunenLayer = L.geoJSON(null, {
     onEachFeature: function (feature, layer) {
         let props = feature.properties;

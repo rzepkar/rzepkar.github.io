@@ -35,7 +35,6 @@ def get_db_connection():
         port=url.port
     )
 
-
 @app.get("/test_db")
 def test_db():
     try:
@@ -43,8 +42,6 @@ def test_db():
         return {"status": "✅ Verbindung erfolgreich!"}
     except Exception as e:
         return {"status": "❌ Verbindung fehlgeschlagen!", "error": str(e)}
-
-
 
 # GET: Tabelle features (erster Test, später löschen!)
 @app.get("/get_data")
@@ -219,5 +216,44 @@ def get_windenergieanlagen():
     except Exception as e:
         print("Fehler in /get_windenergieanlagen:", e)
         return {"error": str(e)}
-   
+ 
+
+
+# GET: Tabelle Energieanlagen mit Case-Sensitivity
+@app.get("/get_energieanlagen")
+def get_energieanlagen():
+    try:
+        conn = get_db_connection()
+        cur = conn.cursor()
+        
+        # Anführungszeichen und Großbuchstaben beachten
+        cur.execute("""
+            SELECT 
+                id, name, leistung, ST_AsGeoJSON(geom) 
+            FROM "energieanlagen";
+        """)
+        features = []
+        
+        for row in cur.fetchall():
+            feature = {
+                "type": "Feature",
+                "properties": {
+                    "id": row[0], 
+                    "name": row[1], 
+                    "anlage": row[2], 
+                    "leistung": row[3],
+                    "energietraeger": row[4],
+                },
+                "geometry": json.loads(row[3])
+            }
+            features.append(feature)
+        
+        cur.close()
+        conn.close()
+        
+        return {"type": "FeatureCollection", "features": features}
+    
+    except Exception as e:
+        print("Fehler in /get_energieanlagen:", e)
+        return {"error": str(e)}
  
