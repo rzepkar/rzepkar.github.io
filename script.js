@@ -23,7 +23,7 @@ let rasterTiles = L.tileLayer('https://rzepkar.github.io/tiles/{z}/{x}/{y}.png',
     attribution: '© HVGB'
 }).addTo(map);
 
-// --- Features Layer (mit einfachen Popups, weil "anlage" & Co. nicht garantiert)
+// --- Features Layer
 let featuresLayer = L.geoJSON(null, {
     onEachFeature: function (feature, layer) {
         let props = feature.properties;
@@ -42,7 +42,7 @@ fetch('https://fastapi-heatbox.onrender.com/get_data')
       featuresLayer.addData(data).addTo(map);
   });
 
-// --- Energieanlagen Layer (mit Unicode-Symbolen)
+// --- Energieanlagen Layer
 let energieanlagenLayer = L.geoJSON(null, {
     pointToLayer: function (feature, latlng) {
         return L.marker(latlng, {
@@ -91,8 +91,8 @@ function getUnicodeSymbol(anlage) {
         case "Bioenergieanlagen": return "🌱";
         case "Klär- und Deponiegasanlagen": return "🧪";
         case "Abfallverbrennungsanlagen": return "🗑️";
-        case "Fossiles Heizkraftwerk": return "🏭";
-        case "Fossile Kraftwerke": return "🛢️";
+        case "Fossiles Heizkraftwerk": return "🏣";
+        case "Fossile Kraftwerke": return "📂";
         case "Fossile Heizwerke": return "🔥";
         case "Sonstige fossile Feuerungsanlagen": return "⛽";
         case "Blockheizkraftwerk": return "⚙️";
@@ -106,7 +106,7 @@ fetch('https://fastapi-heatbox.onrender.com/get_energieanlagen')
       energieanlagenLayer.addData(data).addTo(map);
   });
 
-// --- Kommunen Layer (mit eigenem Style)
+// --- Kommunen Layer
 let kommunenLayer = L.geoJSON(null, {
     style: function(feature) {
         return{
@@ -138,7 +138,7 @@ fetch('https://fastapi-heatbox.onrender.com/get_kommunen')
       kommunenLayer.addData(data).addTo(map);
   });
 
-// --- Windenergieanlagen Layer (als Beispiel, Standardpopup)
+// --- Windenergieanlagen Layer
 let windenergieLayer = L.geoJSON(null, {
     onEachFeature: function (feature, layer) {
         let props = feature.properties;
@@ -159,24 +159,23 @@ fetch('https://fastapi-heatbox.onrender.com/get_windenergieanlagen')
       windenergieLayer.addData(data).addTo(map);
   });
 
-// --- Dummy-Gruppen für Layer-Control
-let dummyLabel1 = L.layerGroup([]);
-let dummyLabel2 = L.layerGroup([]);
-
-// 8️⃣ **Layer-Control für Overlay-Layer**
-let overlayMaps = {
-    '<span style="font-weight:bold; font-size: 14px; color:#555;">🌍 Thematische Daten</span>': dummyLabel1,
-    "Features": featuresLayer,
-    "Energieanlagen": energieanlagenLayer,
-    '<span style="font-weight:bold; font-size: 14px; color:#555;">🧭 Verwaltungsgrenzen</span>': dummyLabel2,
-    "Kommunen": kommunenLayer
+// --- Gruppierte Layer-Control mit Plugin
+let baseLayers = {
+    "🗺 Basemap": cartoVoyagerNoLabels,
+    "🏞 HVGB Raster": rasterTiles
 };
 
-let control = L.control.layers(null, overlayMaps, { collapsed: false }).addTo(map);
+let groupedOverlays = {
+    "🌍 Thematische Daten": {
+        "Features": featuresLayer,
+        "Energieanlagen": energieanlagenLayer
+    },
+    "🧭 Verwaltungsgrenzen": {
+        "Kommunen": kommunenLayer
+    }
+};
 
-// Dummy-Layer direkt nach Erzeugen ausblenden
-map.removeLayer(dummyLabel1);
-map.removeLayer(dummyLabel2);
+L.control.groupedLayers(baseLayers, groupedOverlays, { collapsed: false }).addTo(map);
 
 // 9️⃣ **Simulationsfunktionen**
 let tempLayer = L.layerGroup().addTo(map);

@@ -35,16 +35,7 @@ html, body { margin: 0; padding: 0; height: 100%; }
     color: #007bff;
 }
 
-/* Checkboxen für Gruppenüberschriften (Dummy-Layer) ausblenden */
-.leaflet-control-layers-overlays label span.group-label {
-    font-weight: bold;
-    font-size: 14px;
-    color: #333;
-    pointer-events: none;
-}
-
-.leaflet-control-layers-overlays label span.group-label::before {
-    display: none !important;  /* checkbox ausblenden */
-}
-
-
+<!-- CSS für Grouped Layer Control -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet.groupedlayercontrol/dist/leaflet.groupedlayercontrol.min.css" />
+<!-- JS für Grouped Layer Control -->
+<script src="https://unpkg.com/leaflet.groupedlayercontrol/dist/leaflet.groupedlayercontrol.min.js"></script>
