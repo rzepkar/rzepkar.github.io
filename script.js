@@ -177,6 +177,7 @@ let groupedOverlays = {
 
 L.control.groupedLayers(baseLayers, groupedOverlays, { collapsed: false }).addTo(map);
 
+
 // 9️⃣ **Simulationsfunktionen**
 let tempLayer = L.layerGroup().addTo(map);
 
