@@ -116,10 +116,10 @@ function resetKommunenHighlight() {
     });
 }
 
-// --- Kommunen Layer
+
 let kommunenLayer = L.geoJSON(null, {
     style: function(feature) {
-        return{
+        return {
             color: "#3366cc",
             weight: 2,
             fillColor: "#3366cc",
@@ -127,43 +127,44 @@ let kommunenLayer = L.geoJSON(null, {
         };
     },
 
-	onEachFeature: function (feature, layer) {
-    let props = feature.properties;
+    onEachFeature: function (feature, layer) {
+        let props = feature.properties;
 
-    // Popup mit Basisinformationen
-    layer.bindPopup(`
-        <div style="font-family: sans-serif; font-size: 14px;">
-            <h4>${props.gen}</h4>
-            <table>
-                <tr><td><strong>Bezirk:</strong></td><td>${props.bez || ""}</td></tr>
-                <tr><td><strong>AGS:</strong></td><td>${props.ags || ""}</td></tr>
-                <tr><td><strong>Bevölkerung:</strong></td><td>${props.population || ""}</td></tr>
-                <tr><td><strong>Verfahren:</strong></td><td>${props.verfahren || ""}</td></tr>
-            </table>
-        </div>
-    `);
+        // Popup mit Basisinformationen
+        layer.bindPopup(`
+            <div style="font-family: sans-serif; font-size: 14px;">
+                <h4>${props.gen}</h4>
+                <table>
+                    <tr><td><strong>Bezirk:</strong></td><td>${props.bez || ""}</td></tr>
+                    <tr><td><strong>AGS:</strong></td><td>${props.ags || ""}</td></tr>
+                    <tr><td><strong>Bevölkerung:</strong></td><td>${props.population || ""}</td></tr>
+                    <tr><td><strong>Verfahren:</strong></td><td>${props.verfahren || ""}</td></tr>
+                </table>
+            </div>
+        `);
 
-    layer.on('click', function (e) {
-        resetKommunenHighlight();
-        e.target.setStyle({
-            weight: 3,
-            color: '#ff6600',
-            fillColor: '#ffcc00',
-            fillOpacity: 0.6
-        });
-        e.target.bringToFront();
-
-        // Daten vom API-Endpunkt holen
-        const ags = feature.properties.ags;
-        fetch(`https://fastapi-heatbox.onrender.com/api/kommunen/${ags}`)
-            .then(res => res.json())
-            .then(data => {
-                showInfoBox(data);
+        // Klick + Hervorhebung + InfoBox
+        layer.on('click', function (e) {
+            resetKommunenHighlight();
+            e.target.setStyle({
+                weight: 3,
+                color: '#ff6600',
+                fillColor: '#ffcc00',
+                fillOpacity: 0.6
             });
-    });
-}
+            e.target.bringToFront();
 
-	
+            // Daten vom API-Endpunkt holen
+            const ags = feature.properties.ags;
+            fetch(`https://fastapi-heatbox.onrender.com/api/kommunen/${ags}`)
+                .then(res => res.json())
+                .then(data => {
+                    showInfoBox(data);
+                });
+        });
+    }
+}); 
+
 	
 });
 
