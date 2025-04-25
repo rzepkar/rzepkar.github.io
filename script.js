@@ -165,8 +165,7 @@ let kommunenLayer = L.geoJSON(null, {
     }
 }); 
 
-	
-});
+
 
 fetch('https://fastapi-heatbox.onrender.com/get_kommunen')
   .then(response => response.json())
