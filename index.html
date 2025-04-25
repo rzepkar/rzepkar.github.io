@@ -83,12 +83,25 @@
   
   <!-- Info-Box -->
   <div id="info-box">
-    <button class="close-button" onclick="closeInfoBox()">×</button>
-    <h3 style="margin-top: 0; margin-bottom: 8px;">Wärmebedarf</h3>
-    <h4 id="info-title" style="margin-bottom: 6px; font-size: 16px;"></h4>
-    <div id="info-status"></div>
-    <canvas id="energymixChart" width="280" height="280"></canvas>
+
+	<button class="close-button" onclick="closeInfoBox()">×</button>
+	<h3 style="margin-top: 0; margin-bottom: 8px;">Wärmebedarf</h3>
+	<h4 id="info-title" style="margin-bottom: 6px; font-size: 16px;"></h4>
+	<div id="info-status"></div>
+	
+	<div id="info-contact" style="margin-top: 10px; margin-bottom: 10px; font-size: 12px; color: #555;">
+		Haben Sie Fragen zur kommunalen Wärmeplanung?<br>
+		<a href="mailto:deinemail@beispiel.de?subject=Frage%20zur%20kommunalen%20Wärmeplanung" style="color: #007bff; text-decoration: underline;">
+		Stellen Sie sie gerne!
+		</a>
+	</div>
+
+	<canvas id="energymixChart" width="280" height="280"></canvas>
   </div>
+</div>
+
+  
+  
 
   <!-- ✨ Close-Funktion -->
   <script>
