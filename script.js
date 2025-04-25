@@ -264,7 +264,7 @@ function showInfoBox(data) {
     // Status-Anzeige
     document.getElementById("info-status").innerHTML = `
         <span style="padding: 4px 8px; background: #eee; border-radius: 4px;">
-            Status Kommunale Wärmeplanung: ${data.kwp_status}
+            Status KWP: ${data.kwp_status}
         </span>
     `;
 
