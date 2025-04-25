@@ -110,6 +110,12 @@ fetch('https://fastapi-heatbox.onrender.com/get_energieanlagen')
       energieanlagenLayer.addData(data).addTo(map);
   });
 
+function resetKommunenHighlight() {
+    kommunenLayer.eachLayer(function (layer) {
+        kommunenLayer.resetStyle(layer);
+    });
+}
+
 // --- Kommunen Layer
 let kommunenLayer = L.geoJSON(null, {
     style: function(feature) {
@@ -120,20 +126,37 @@ let kommunenLayer = L.geoJSON(null, {
             fillOpacity: 0
         };
     },
-    onEachFeature: function (feature, layer) {
-        let props = feature.properties;
-        layer.bindPopup(`
-            <div style="font-family: sans-serif; font-size: 14px;">
-                <h4>${props.gen}</h4>
-                <table>
-                    <tr><td><strong>Bezirk:</strong></td><td>${props.bez || ""}</td></tr>
-                    <tr><td><strong>AGS:</strong></td><td>${props.ags || ""}</td></tr>
-                    <tr><td><strong>Bevölkerung:</strong></td><td>${props.population || ""}</td></tr>
-                    <tr><td><strong>Verfahren:</strong></td><td>${props.verfahren || ""}</td></tr>
-                </table>
-            </div>
-        `);
-    }
+
+	onEachFeature: function (feature, layer) {
+    let props = feature.properties;
+
+    // Popup mit Basisinformationen
+    layer.bindPopup(`
+        <div style="font-family: sans-serif; font-size: 14px;">
+            <h4>${props.gen}</h4>
+            <table>
+                <tr><td><strong>Bezirk:</strong></td><td>${props.bez || ""}</td></tr>
+                <tr><td><strong>AGS:</strong></td><td>${props.ags || ""}</td></tr>
+                <tr><td><strong>Bevölkerung:</strong></td><td>${props.population || ""}</td></tr>
+                <tr><td><strong>Verfahren:</strong></td><td>${props.verfahren || ""}</td></tr>
+            </table>
+        </div>
+    `);
+
+    // 👉 Hervorhebung beim Klick
+    layer.on('click', function (e) {
+        resetKommunenHighlight(); // Zuerst alte Zurücksetzen
+        e.target.setStyle({
+            weight: 3,
+            color: '#ff6600',
+            fillColor: '#ffcc00',
+            fillOpacity: 0.6
+        });
+        e.target.bringToFront();
+    });
+}
+
+	
 });
 
 fetch('https://fastapi-heatbox.onrender.com/get_kommunen')
