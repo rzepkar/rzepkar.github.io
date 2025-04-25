@@ -256,4 +256,49 @@ def get_energieanlagen():
     except Exception as e:
         print("Fehler in /get_energieanlagen:", e)
         return {"error": str(e)}
+        
+        
+        
+        
+# GET: Einzelne Kommune mit Waermebedarf + Status
+@app.get("/api/kommunen/{ags}")
+def get_kommune_info(ags: str):
+    try:
+        conn = get_db_connection()
+        cur = conn.cursor()
+        
+        cur.execute("""
+            SELECT 
+                ags, gen, kwp_status,
+                waermebedarf_gasheizung,
+                waermebedarf_oelheizung,
+                waermebedarf_fernwaerme,
+                waermebedarf_elektr_direktheizung
+            FROM "Kommunen"
+            WHERE ags = %s
+        """, (ags,))
+        
+        row = cur.fetchone()
+        cur.close()
+        conn.close()
+        
+        if not row:
+            return {"error": "Kommune nicht gefunden"}
+        
+        return {
+            "ags": row[0],
+            "name": row[1],
+            "kwp_status": row[2],
+            "energiemix": {
+                "Gas": row[3],
+                "Öl": row[4],
+                "Fernwärme": row[5],
+                "Elektro": row[6]
+            }
+        }
+
+    except Exception as e:
+        print("Fehler in /api/kommunen/{ags}:", e)
+        return {"error": str(e)}
+
  

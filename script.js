@@ -143,9 +143,9 @@ let kommunenLayer = L.geoJSON(null, {
         </div>
     `);
 
-    // 👉 Hervorhebung beim Klick
+    // 👉 Hervorhebung beim Klick, ANPASSEN
     layer.on('click', function (e) {
-        resetKommunenHighlight(); // Zuerst alte Zurücksetzen
+        resetKommunenHighlight(); // Zuerst alte Zurücksetzen, function resetKommunenHighlight
         e.target.setStyle({
             weight: 3,
             color: '#ff6600',
