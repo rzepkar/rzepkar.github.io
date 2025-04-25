@@ -143,9 +143,8 @@ let kommunenLayer = L.geoJSON(null, {
         </div>
     `);
 
-    // 👉 Hervorhebung beim Klick, ANPASSEN
     layer.on('click', function (e) {
-        resetKommunenHighlight(); // Zuerst alte Zurücksetzen, function resetKommunenHighlight
+        resetKommunenHighlight();
         e.target.setStyle({
             weight: 3,
             color: '#ff6600',
@@ -153,7 +152,18 @@ let kommunenLayer = L.geoJSON(null, {
             fillOpacity: 0.6
         });
         e.target.bringToFront();
+
+        // Daten vom API-Endpunkt holen
+        const ags = feature.properties.ags;
+        fetch(`https://fastapi-heatbox.onrender.com/api/kommunen/${ags}`)
+            .then(res => res.json())
+            .then(data => {
+                showInfoBox(data);
+            });
     });
+}
+
+	
 }
 
 	
@@ -243,3 +253,48 @@ resetButton.onAdd = function () {
     return div;
 };
 resetButton.addTo(map);
+
+//  Info-Box, mit API-Daten aus Kommunen und HTML-block mit Chart.js
+
+let chartInstance = null;
+
+function showInfoBox(data) {
+    // Box anzeigen
+    document.getElementById("info-box").style.display = "block";
+    document.getElementById("info-title").innerText = data.name;
+
+    // Status-Anzeige
+    document.getElementById("info-status").innerHTML = `
+        <span style="padding: 4px 8px; background: #eee; border-radius: 4px;">
+            Status: ${data.kwp_status}
+        </span>
+    `;
+
+    // Tortendiagramm rendern
+    const ctx = document.getElementById("energymixChart").getContext("2d");
+
+    // Vorherigen Chart zerstören
+    if (chartInstance) {
+        chartInstance.destroy();
+    }
+
+    chartInstance = new Chart(ctx, {
+        type: 'pie',
+        data: {
+            labels: Object.keys(data.energiemix),
+            datasets: [{
+                data: Object.values(data.energiemix),
+                backgroundColor: ['#f44336', '#ff9800', '#2196f3', '#4caf50']
+            }]
+        },
+        options: {
+            responsive: false,
+            plugins: {
+                legend: {
+                    position: 'bottom'
+                }
+            }
+        }
+    });
+}
+

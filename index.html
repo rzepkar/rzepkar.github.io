@@ -13,6 +13,9 @@
 
   <!-- Dein eigenes Stylesheet -->
   <link rel="stylesheet" href="style.css" />
+  
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> <!-- Chart: Für die info-box der kommunen, siehe unten -->
+
 </head>
 
 <body>
@@ -32,5 +35,26 @@
 
   <!-- Dein Hauptskript -->
   <script src="script.js" defer></script>
+  
+  <div id="info-box" style="
+  position: absolute;
+  top: 80px;
+  right: 20px;
+  width: 300px;
+  background: white;
+  padding: 16px;
+  border-radius: 8px;
+  box-shadow: 0 0 6px rgba(0,0,0,0.2);
+  font-family: sans-serif;
+  font-size: 14px;
+  z-index: 1000;
+  display: none;
+">
+  <h4 id="info-title"></h4>
+  <div id="info-status"></div>
+  <canvas id="energymixChart" width="280" height="280"></canvas>
+</div>
+
+  
 </body>
 </html>
