@@ -36,23 +36,3 @@ html, body { margin: 0; padding: 0; height: 100%; }
 }
 
 
-/* ✨ Anpassung für kleine Bildschirme */
-@media (max-width: 1200px) {
-  #info-box {
-    width: 250px;
-    font-size: 13px;
-    bottom: 10px;
-    right: 10px;
-  }
-}
-
-@media (max-width: 800px) {
-  #info-box {
-    width: 200px;
-    font-size: 12px;
-    bottom: 10px;
-    right: 10px;
-  }
-}
-
-
