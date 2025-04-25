@@ -164,8 +164,6 @@ let kommunenLayer = L.geoJSON(null, {
 }
 
 	
-}
-
 	
 });
 
