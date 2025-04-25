@@ -150,7 +150,7 @@ let kommunenLayer = L.geoJSON(null, {
                 weight: 3,
                 color: '#ff6600',
                 fillColor: '#ffcc00',
-                fillOpacity: 0.6
+                fillOpacity: 0.4
             });
             e.target.bringToFront();
 
