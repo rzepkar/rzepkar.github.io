@@ -88,18 +88,18 @@ let energieanlagenLayer = L.geoJSON(null, {
 
 function getUnicodeSymbol(anlage) {
     switch (anlage) {
-        case "Freiflächen-Solaranlage": return "☀️";
+        case "Freiflächen-Solaranlage": return "🔆️";
         case "Windenergieanlagn": return "🌬️";
         case "Wasserkraftwerk": return "💧";
-        case "Geothermische Anlage": return "🌋";
-        case "Bioenergieanlage": return "🌱";
+        case "Geothermische Anlage": return "🛢️";
+        case "Bioenergieanlage": return "♻️";
         case "Klär- oder Deponiegasanlage": return "🧪";
         case "Abfallverbrennungsanlage": return "🗑️";
         case "Fossiles Heizkraftwerk": return "🏣";
         case "Fossiles Kraftwerk": return "📂";
         case "Fossiles Heizwerk": return "🔥";
         case "Sonstige fossile Feuerungsanlage": return "⛽";
-        case "Blockheizkraftwerk": return "⚙️";
+        case "Blockheizkraftwerk": return "🏭️";
         default: return "❓";
     }
 }
