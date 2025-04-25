@@ -16,7 +16,7 @@
   
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> <!-- Chart.js für die Info-Box -->
 
-  <!-- ✨ Neues: Responsive Info-Box Style -->
+  <!-- ✨ Responsive Info-Box Style + Close-Button Style -->
   <style>
     #info-box {
       position: absolute;
@@ -31,6 +31,16 @@
       font-size: 14px;
       z-index: 1000;
       display: none;
+    }
+
+    #info-box .close-button {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      background: transparent;
+      border: none;
+      font-size: 18px;
+      cursor: pointer;
     }
 
     @media (max-width: 1200px) {
@@ -73,11 +83,19 @@
   
   <!-- Info-Box -->
   <div id="info-box">
+    <button class="close-button" onclick="closeInfoBox()">×</button>
     <h3 style="margin-top: 0; margin-bottom: 8px;">Wärmebedarf</h3>
     <h4 id="info-title" style="margin-bottom: 6px; font-size: 16px;"></h4>
     <div id="info-status"></div>
     <canvas id="energymixChart" width="280" height="280"></canvas>
   </div>
-  
+
+  <!-- ✨ Close-Funktion -->
+  <script>
+    function closeInfoBox() {
+      document.getElementById('info-box').style.display = 'none';
+    }
+  </script>
+
 </body>
 </html>
