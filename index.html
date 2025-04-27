@@ -16,7 +16,7 @@
   
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> <!-- Chart.js für die Info-Box -->
 
-  <!-- ✨ Moderner Style für Info-Box und Layer-Control -->
+  <!-- ✨ Modernes UI Styling -->
   <style>
     /* Info-Box Style */
     #info-box {
@@ -24,7 +24,7 @@
       right: 20px;
       bottom: 20px;
       width: 300px;
-      background: rgba(255, 255, 255, 0.85);
+      background: rgba(255, 255, 255, 0.75);
       backdrop-filter: blur(6px);
       padding: 16px;
       border-radius: 10px;
@@ -53,10 +53,24 @@
 
     /* Layer-Control modernisieren */
     .leaflet-control-layers {
-      background: rgba(255, 255, 255, 0.85);
+      background: rgba(255, 255, 255, 0.75);
       backdrop-filter: blur(6px);
       border-radius: 8px;
       box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+
+    /* Leaflet Popup modernisieren */
+    .leaflet-popup-content-wrapper {
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(4px);
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.25);
+      font-family: 'Segoe UI', sans-serif;
+      font-size: 13px;
+    }
+    .leaflet-popup-tip {
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(4px);
     }
 
     /* Responsive Anpassungen */
