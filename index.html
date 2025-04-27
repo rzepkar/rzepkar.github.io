@@ -16,33 +16,50 @@
   
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> <!-- Chart.js für die Info-Box -->
 
-  <!-- ✨ Responsive Info-Box Style + Close-Button Style -->
+  <!-- ✨ Moderner Style für Info-Box und Layer-Control -->
   <style>
+    /* Info-Box Style */
     #info-box {
       position: absolute;
       right: 20px;
       bottom: 20px;
       width: 300px;
-      background: white;
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(6px);
       padding: 16px;
-      border-radius: 8px;
-      box-shadow: 0 0 6px rgba(0,0,0,0.2);
-      font-family: sans-serif;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      font-family: 'Segoe UI', sans-serif;
       font-size: 14px;
       z-index: 1000;
       display: none;
     }
 
+    /* Close-Button Style */
     #info-box .close-button {
       position: absolute;
       top: 8px;
       right: 8px;
       background: transparent;
       border: none;
-      font-size: 18px;
+      font-size: 20px;
+      font-weight: bold;
       cursor: pointer;
+      color: #666;
+    }
+    #info-box .close-button:hover {
+      color: #000;
     }
 
+    /* Layer-Control modernisieren */
+    .leaflet-control-layers {
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(6px);
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+
+    /* Responsive Anpassungen */
     @media (max-width: 1200px) {
       #info-box {
         width: 250px;
@@ -83,24 +100,20 @@
   
   <!-- Info-Box -->
   <div id="info-box">
+    <button class="close-button" onclick="closeInfoBox()">×</button>
+    <h4 id="info-title" style="margin-bottom: 6px; font-size: 16px;"></h4>
+    <div id="info-status"></div>
+    
+    <div id="info-contact" style="margin-top: 10px; margin-bottom: 10px; font-size: 12px; color: #555;">
+      Haben Sie Fragen zur kommunalen Wärmeplanung?<br>
+      <a href="mailto:deinemail@beispiel.de?subject=Frage%20zur%20kommunalen%20Wärmeplanung" style="color: #007bff; text-decoration: underline;">
+        Stellen Sie sie gerne!
+      </a>
+    </div>
 
-	<button class="close-button" onclick="closeInfoBox()">×</button>
-	<h4 id="info-title" style="margin-bottom: 6px; font-size: 16px;"></h4>
-	<div id="info-status"></div>
-	
-	<div id="info-contact" style="margin-top: 10px; margin-bottom: 10px; font-size: 12px; color: #555;">
-		Haben Sie Fragen zur kommunalen Wärmeplanung?<br>
-		<a href="mailto:deinemail@beispiel.de?subject=Frage%20zur%20kommunalen%20Wärmeplanung" style="color: #007bff; text-decoration: underline;">
-		Stellen Sie sie gerne!
-		</a>
-	</div>
-	<h4 style="margin-top: 0; margin-bottom: 8px;">Wärmebedarf</h4>
-	<canvas id="energymixChart" width="280" height="280"></canvas>
+    <h4 style="margin-top: 0; margin-bottom: 8px;">Wärmebedarf</h4>
+    <canvas id="energymixChart" width="280" height="280"></canvas>
   </div>
-</div>
-
-  
-  
 
   <!-- ✨ Close-Funktion -->
   <script>
