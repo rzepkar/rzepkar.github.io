@@ -137,8 +137,7 @@ let kommunenLayer = L.geoJSON(null, {
                 <table>
                     <tr><td><strong>Bezirk:</strong></td><td>${props.bez || ""}</td></tr>
                     <tr><td><strong>AGS:</strong></td><td>${props.ags || ""}</td></tr>
-                    <tr><td><strong>Bevölkerung:</strong></td><td>${props.population || ""}</td></tr>
-                    <tr><td><strong>Verfahren:</strong></td><td>${props.verfahren || ""}</td></tr>
+                    <tr><td><strong>Population:</strong></td><td>${props.population || ""}</td></tr>
                 </table>
             </div>
         `);
@@ -202,12 +201,10 @@ let baseLayers = {
 };
 
 let groupedOverlays = {
-    "Thematische Daten": {
-        "Features": featuresLayer,
+    "Bestand": {
         "Energieanlagen": energieanlagenLayer
     },
-    "Verwaltungsgrenzen": {
-        "Kommunen": kommunenLayer
+	"Potenzial": {
     }
 };
 
