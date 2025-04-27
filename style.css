@@ -38,11 +38,11 @@ html, body { margin: 0; padding: 0; height: 100%; }
 /* Linke Box - Grundstruktur */
 #left-box {
   position: absolute;
-  top: 80px;
+  top: 100px;
   left: 0;
   height: auto;
-  width: 40px; /* eingeklappt */
-  background: rgba(255, 255, 255, 0.75);
+  width: 80px; /* eingeklappt */
+  background: rgba(255, 255, 255, 0.60);
   backdrop-filter: blur(6px);
   border-radius: 0 10px 10px 0;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
@@ -75,7 +75,7 @@ html, body { margin: 0; padding: 0; height: 100%; }
 
 /* Erweiterung für große Ansicht */
 #left-box.expanded {
-  width: 300px; /* ausgeklappt */
+  width: 500px; /* ausgeklappt */
 }
 #left-box.expanded #left-content {
   display: block;
