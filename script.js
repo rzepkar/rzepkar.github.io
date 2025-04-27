@@ -6,8 +6,8 @@ let map = L.map('map', {
     maxZoom: 17,
     scrollWheelZoom: true,
     smoothWheelZoom: false,
-    smoothSensitivity: 1.3,
-	zoomControl: false // kein standard plus minus element von leaflet
+    smoothSensitivity: 1.3
+	//zoomControl: false // kein standard plus minus element von leaflet
 });
 
 // Basemaps
