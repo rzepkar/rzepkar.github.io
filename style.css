@@ -35,4 +35,50 @@ html, body { margin: 0; padding: 0; height: 100%; }
     color: #007bff;
 }
 
+/* Linke Box - Grundstruktur */
+#left-box {
+  position: absolute;
+  top: 80px;
+  left: 0;
+  height: auto;
+  width: 40px; /* eingeklappt */
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(6px);
+  border-radius: 0 10px 10px 0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  transition: width 0.3s ease;
+  overflow: hidden;
+  z-index: 1000;
+}
+
+/* Button im eingeklappten Zustand */
+#left-toggle-button {
+  background: transparent;
+  border: none;
+  font-size: 20px;
+  font-weight: bold;
+  cursor: pointer;
+  margin: 8px;
+  color: #666;
+}
+#left-toggle-button:hover {
+  color: #000;
+}
+
+/* Inhalt innerhalb der Box */
+#left-content {
+  display: none;
+  padding: 16px;
+  font-family: 'Segoe UI', sans-serif;
+  font-size: 14px;
+}
+
+/* Erweiterung für große Ansicht */
+#left-box.expanded {
+  width: 300px; /* ausgeklappt */
+}
+#left-box.expanded #left-content {
+  display: block;
+}
+
 
