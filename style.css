@@ -75,7 +75,7 @@ html, body { margin: 0; padding: 0; height: 100%; }
 
 /* Erweiterung für große Ansicht */
 #left-box.expanded {
-  width: 500px; /* ausgeklappt */
+  width: 350px; /* ausgeklappt */
 }
 #left-box.expanded #left-content {
   display: block;
