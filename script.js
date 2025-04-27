@@ -202,12 +202,7 @@ let baseLayers = {
 
 let groupedOverlays = {
     "Bestand": {
-        "Energieanlagen": energieanlagenLayer,
-		"Wärmenetze": waermenetzeLayer
-    },
-	"Potenzial": {
-		"Erzeugungspotenziale": erzeugungspotenzialeLayer,
-		"Eignungsgebiete": eignungsgebieteLayer
+        "Energieanlagen": energieanlagenLayer
     }
 };
 
