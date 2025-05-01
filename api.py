@@ -337,3 +337,67 @@ def get_energiemix_verlauf(ags: str):
         print("Fehler in /api/energiemix/{ags}:", e)
         return {"error": str(e)}
 
+@app.get("/get_waermenetze")
+def get_waermenetze():
+    try:
+        conn = get_db_connection()
+        cur = conn.cursor()
+        
+        cur.execute("""
+            SELECT name, bemerkung, art, ST_AsGeoJSON(geom)
+            FROM waermenetze;
+        """)
+        
+        features = []
+        for row in cur.fetchall():
+            feature = {
+                "type": "Feature",
+                "properties": {
+                    "name": row[0],
+                    "bemerkung": row[1],
+                    "art": row[2]
+                },
+                "geometry": json.loads(row[3])
+            }
+            features.append(feature)
+
+        cur.close()
+        conn.close()
+        return {"type": "FeatureCollection", "features": features}
+    
+    except Exception as e:
+        print("Fehler in /get_waermenetze:", e)
+        return {"error": str(e)}
+
+@app.get("/get_erzeugungspotentiale")
+def get_erzeugungspotentiale():
+    try:
+        conn = get_db_connection()
+        cur = conn.cursor()
+        
+        cur.execute("""
+            SELECT name, art, bemerkung, erzeugungs, ST_AsGeoJSON(geom)
+            FROM erzeugungspotentiale;
+        """)
+        
+        features = []
+        for row in cur.fetchall():
+            feature = {
+                "type": "Feature",
+                "properties": {
+                    "name": row[0],
+                    "art": row[1],
+                    "bemerkung": row[2],
+                    "erzeugungs": row[3]
+                },
+                "geometry": json.loads(row[4])
+            }
+            features.append(feature)
+
+        cur.close()
+        conn.close()
+        return {"type": "FeatureCollection", "features": features}
+    
+    except Exception as e:
+        print("Fehler in /get_erzeugungspotentiale:", e)
+        return {"error": str(e)}
