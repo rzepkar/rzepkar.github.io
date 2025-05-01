@@ -235,12 +235,13 @@ let baseLayers = {
 let groupedOverlays = {
     "Bestand": {
         "Energieanlagen": energieanlagenLayer,
-		"Wärmenetze": waermenetzeLayer
-    };
-	"Potenzial": {
+        "Wärmenetze": waermenetzeLayer
+    },
+    "Potenzial": {
         "Erzeugungspotenzial": erzeugungspotentialeLayer
     }
 };
+
 
 // Fix: group layers kommt als erstes Argument, base layers als zweites!
 L.control.groupedLayers(baseLayers, groupedOverlays, { collapsed: false }).addTo(map);
