@@ -83,18 +83,19 @@ html, body { margin: 0; padding: 0; height: 100%; }
 
 #startup-hinweis {
   position: absolute;
-  top: 30px;
+  top: 20px;
   left: 50%;
   transform: translateX(-50%);
   background: rgba(255, 255, 255, 0.75);
   backdrop-filter: blur(6px);
-  padding: 14px 20px;
+  padding: 10px 16px;
   border-radius: 8px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
   font-family: 'Segoe UI', sans-serif;
   font-size: 14px;
   z-index: 1500;
   max-width: 90%;
+  line-height: 1.4;
   text-align: center;
 }
 
