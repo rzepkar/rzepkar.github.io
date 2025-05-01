@@ -364,3 +364,35 @@ def get_erzeugungspotenziale():
     except Exception as e:
         print("Fehler in /get_erzeugungspotenziale:", e)
         return {"error": str(e)}
+        
+@app.get("/get_eignungsgebiete")
+def get_eignungsgebiete():
+    try:
+        conn = get_db_connection()
+        cur = conn.cursor()
+        
+        cur.execute("""
+            SELECT name, art, ST_AsGeoJSON(geom)
+            FROM eignungsgebiete;
+        """)
+        
+        features = []
+        for row in cur.fetchall():
+            feature = {
+                "type": "Feature",
+                "properties": {
+                    "name": row[0],
+                    "art": row[1]
+                },
+                "geometry": json.loads(row[2])
+            }
+            features.append(feature)
+
+        cur.close()
+        conn.close()
+        return {"type": "FeatureCollection", "features": features}
+    
+    except Exception as e:
+        print("Fehler in /get_eignungsgebiete:", e)
+        return {"error": str(e)}
+

@@ -194,8 +194,9 @@ let waermenetzeLayer = L.geoJSON(null, {
 fetch('https://fastapi-heatbox.onrender.com/get_waermenetze')
   .then(response => response.json())
   .then(data => {
-      waermenetzeLayer.addData(data).addTo(map);
+      waermenetzeLayer.addData(data).addTo(map).bringToFront();
   });
+ 
 
 let erzeugungspotenzialeLayer = L.geoJSON(null, {
     style: {
@@ -221,8 +222,34 @@ let erzeugungspotenzialeLayer = L.geoJSON(null, {
 fetch('https://fastapi-heatbox.onrender.com/get_erzeugungspotenziale')
   .then(response => response.json())
   .then(data => {
-      erzeugungspotenzialeLayer.addData(data).addTo(map);
+      erzeugungspotenzialeLayer.addData(data).addTo(map).bringToFront();
   });
+  
+  
+let eignungsgebieteLayer = L.geoJSON(null, {
+    pane: 'potenzialPane', // Optional: nur, wenn du bereits eigene Panes nutzt
+    style: {
+        color: '#990099',
+        weight: 2,
+        fillOpacity: 0.4
+    },
+    onEachFeature: function (feature, layer) {
+        let props = feature.properties;
+        layer.bindPopup(`
+            <div style="font-family: sans-serif; font-size: 14px;">
+                <h4>${props.name}</h4>
+                <p><strong>Art:</strong> ${props.art || ""}</p>
+            </div>
+        `);
+    }
+});
+
+fetch('https://fastapi-heatbox.onrender.com/get_eignungsgebiete')
+  .then(response => response.json())
+  .then(data => {
+      eignungsgebieteLayer.addData(data).addTo(map).bringToFront();
+  });
+
 
 
 // 8️⃣ Layer-Control (gefixt für groupedLayerControl)
@@ -238,7 +265,8 @@ let groupedOverlays = {
         "Wärmenetze": waermenetzeLayer
     },
     "Potenzial": {
-        "Erzeugungspotenzial": erzeugungspotenzialeLayer
+        "Erzeugungspotenzial": erzeugungspotenzialeLayer,
+		"Eignungsgebiete": eignungsgebieteLayer
     }
 };
 
