@@ -14,14 +14,14 @@
   <!-- Dein eigenes Stylesheet -->
   <link rel="stylesheet" href="style.css" />
   
+  <!-- Leaflet.draw CSS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet-draw@1.0.4/dist/leaflet.draw.css" />
-  <script src="https://unpkg.com/leaflet-draw@1.0.4/dist/leaflet.draw.js"></script>
-  
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> <!-- Chart.js für die Info-Box -->
+
+  <!-- Chart.js für die Info-Box -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
   <!-- ✨ Modernes UI Styling -->
   <style>
-    /* Info-Box Style */
     #info-box {
       position: absolute;
       right: 20px;
@@ -37,12 +37,11 @@
       z-index: 1000;
       display: none;
     }
-	
-	#info-title {
-	  margin-top: 0;
-	}
 
-    /* Close-Button Style */
+    #info-title {
+      margin-top: 0;
+    }
+
     #info-box .close-button {
       position: absolute;
       top: 8px;
@@ -54,11 +53,11 @@
       cursor: pointer;
       color: #666;
     }
+
     #info-box .close-button:hover {
       color: #000;
     }
 
-    /* Layer-Control modernisieren */
     .leaflet-control-layers {
       background: rgba(255, 255, 255, 0.60);
       backdrop-filter: blur(6px);
@@ -66,7 +65,6 @@
       box-shadow: 0 4px 12px rgba(0,0,0,0.2);
     }
 
-    /* Leaflet Popup modernisieren */
     .leaflet-popup-content-wrapper {
       background: rgba(255, 255, 255, 0.8);
       backdrop-filter: blur(4px);
@@ -75,12 +73,12 @@
       font-family: 'Segoe UI', sans-serif;
       font-size: 13px;
     }
+
     .leaflet-popup-tip {
       background: rgba(255, 255, 255, 0.8);
       backdrop-filter: blur(4px);
     }
 
-    /* Responsive Anpassungen */
     @media (max-width: 1200px) {
       #info-box {
         width: 250px;
@@ -98,34 +96,81 @@
         bottom: 10px;
       }
     }
+
+    /* Sidebar-Box */
+    #left-box {
+      position: absolute;
+      top: 80px;
+      left: 0;
+      height: auto;
+      width: 40px;
+      background: rgba(255, 255, 255, 0.75);
+      backdrop-filter: blur(6px);
+      border-radius: 0 10px 10px 0;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      transition: width 0.3s ease;
+      overflow: hidden;
+      z-index: 1000;
+    }
+
+    #left-toggle-button {
+      background: transparent;
+      border: none;
+      font-size: 20px;
+      font-weight: bold;
+      cursor: pointer;
+      margin: 8px;
+      color: #666;
+    }
+
+    #left-toggle-button:hover {
+      color: #000;
+    }
+
+    #left-content {
+      display: none;
+      padding: 16px;
+      font-family: 'Segoe UI', sans-serif;
+      font-size: 14px;
+    }
+
+    #left-box.expanded {
+      width: 300px;
+    }
+
+    #left-box.expanded #left-content {
+      display: block;
+    }
   </style>
 </head>
 
 <body>
   <div id="map"></div>
-  
-  <div id="startup-hinweis">
-	<button class="close-button" onclick="closeStartupHinweis()">×</button>
-	<p>
-		Hinweis: Diese Anwendung ist ein Prototyp, die verwendeten Daten sind teilweise fiktiv.
-	</p>
-  </div>
-  
-  <div id="left-box">
-	<button id="left-toggle-button">▶</button>
-	<div id="left-content">
-		<h2 style="margin-top: 0;">Dashboard Wärmeplanung</h2>
-		<h4>Platzhalter</h4>
-		<button id="start-draw-button" style="margin-bottom: 10px;">Gebiet analysieren</button>
-		<div id="draw-result" style="font-size: 13px; margin-top: 10px;"></div>
 
-	</div>
+  <div id="startup-hinweis">
+    <button class="close-button" onclick="closeStartupHinweis()">×</button>
+    <p>
+      Hinweis: Diese Anwendung ist ein Prototyp, die verwendeten Daten sind teilweise fiktiv.
+    </p>
+  </div>
+
+  <div id="left-box">
+    <button id="left-toggle-button">▶</button>
+    <div id="left-content">
+      <h2 style="margin-top: 0;">Dashboard Wärmeplanung</h2>
+      <h4>Platzhalter</h4>
+      <button id="start-draw-button" style="margin-bottom: 10px;">Gebiet analysieren</button>
+      <div id="draw-result" style="font-size: 13px; margin-top: 10px;"></div>
+    </div>
   </div>
 
   <!-- Leaflet JS -->
   <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 
-  <!-- Grouped Layer Control JS -->
+  <!-- Leaflet.draw -->
+  <script src="https://unpkg.com/leaflet-draw@1.0.4/dist/leaflet.draw.js"></script>
+
+  <!-- Grouped Layer Control -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-groupedlayercontrol/0.6.1/leaflet.groupedlayercontrol.min.js"></script>
 
   <!-- Zusätzliche Plugins -->
@@ -136,13 +181,13 @@
 
   <!-- Dein Hauptskript -->
   <script src="script.js" defer></script>
-  
+
   <!-- Info-Box -->
   <div id="info-box">
     <button class="close-button" onclick="closeInfoBox()">×</button>
     <h4 id="info-title" style="margin-bottom: 6px; font-size: 16px;"></h4>
     <div id="info-status"></div>
-    
+
     <div id="info-contact" style="margin-top: 10px; margin-bottom: 10px; font-size: 12px; color: #555;">
       Haben Sie Fragen zur kommunalen Wärmeplanung?<br>
       <a href="mailto:deinemail@beispiel.de?subject=Frage%20zur%20kommunalen%20Wärmeplanung" style="color: #007bff; text-decoration: underline;">
@@ -154,12 +199,26 @@
     <canvas id="energymixChart" width="280" height="280"></canvas>
   </div>
 
-  <!-- ✨ Close-Funktion -->
+  <!-- JS-Funktionen -->
   <script>
     function closeInfoBox() {
       document.getElementById('info-box').style.display = 'none';
     }
-  </script>
 
+    function closeStartupHinweis() {
+      document.getElementById('startup-hinweis').style.display = 'none';
+    }
+
+    // Sidebar auf-/zuklappen
+    document.addEventListener('DOMContentLoaded', function () {
+      const leftBox = document.getElementById('left-box');
+      const leftToggleButton = document.getElementById('left-toggle-button');
+
+      leftToggleButton.addEventListener('click', function () {
+        leftBox.classList.toggle('expanded');
+        leftToggleButton.textContent = leftBox.classList.contains('expanded') ? '◀' : '▶';
+      });
+    });
+  </script>
 </body>
 </html>
