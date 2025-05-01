@@ -13,6 +13,35 @@ let map = L.map('map', {
 map.createPane('interaktivePotenzialPane');
 map.getPane('interaktivePotenzialPane').style.zIndex = 650; // über allem außer Labels
 
+let drawnItems = new L.FeatureGroup().addTo(map);
+
+let drawControl = new L.Control.Draw({
+    draw: {
+        polygon: true,
+        polyline: false,
+        rectangle: false,
+        circle: false,
+        marker: false,
+        circlemarker: false
+    },
+    edit: {
+        featureGroup: drawnItems
+    }
+});
+map.addControl(drawControl);
+
+map.on(L.Draw.Event.CREATED, function (e) {
+    drawnItems.clearLayers(); // nur ein Polygon gleichzeitig
+    let layer = e.layer;
+    drawnItems.addLayer(layer);
+
+    let polygon = layer.toGeoJSON();
+
+    // Feature-Suche in Polygon starten
+    auswertungFeaturesInPolygon(polygon);
+});
+
+
 // Basemaps
 let cartoVoyagerNoLabels = L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager_nolabels/{z}/{x}/{y}{r}.png', {
     attribution: '&copy; CartoDB, OpenStreetMap contributors',
@@ -281,6 +310,25 @@ let groupedOverlays = {
 L.control.groupedLayers(baseLayers, groupedOverlays, { collapsed: false }).addTo(map);
 
 // 9️⃣ **Simulationsfunktionen**
+
+function auswertungFeaturesInPolygon(polygon) {
+    let enthalteneFeatures = [];
+
+    map.eachLayer(layer => {
+        if (layer.feature && layer.getBounds && turf.booleanIntersects(layer.toGeoJSON(), polygon)) {
+            enthalteneFeatures.push(layer.feature.properties.name || 'Unbenannt');
+        }
+    });
+
+    if (enthalteneFeatures.length > 0) {
+        alert("Enthaltene Features:\n" + enthalteneFeatures.join('\n'));
+    } else {
+        alert("Keine Features enthalten.");
+    }
+}
+
+// 9️⃣ **Simulationsfunktionen 2 - alt **
+
 let tempLayer = L.layerGroup().addTo(map);
 
 map.on('click', function (e) {
