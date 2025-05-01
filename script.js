@@ -227,7 +227,6 @@ fetch('https://fastapi-heatbox.onrender.com/get_erzeugungspotenziale')
   
   
 let eignungsgebieteLayer = L.geoJSON(null, {
-    pane: 'potenzialPane', // Optional: nur, wenn du bereits eigene Panes nutzt
     style: {
         color: '#990099',
         weight: 2,
