@@ -35,6 +35,10 @@ html, body { margin: 0; padding: 0; height: 100%; }
     color: #007bff;
 }
 
+.leaflet-draw {
+  display: none;
+}
+
 /* Linke Box - Grundstruktur */
 #left-box {
   position: absolute;
