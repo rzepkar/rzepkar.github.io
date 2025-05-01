@@ -427,22 +427,16 @@ function showInfoBox(data) {
 
 
 
-// Neues Skript für die linke aufklappbare Box
 document.addEventListener('DOMContentLoaded', function () {
-    const leftBox = document.getElementById('left-box');
-    const leftToggleButton = document.getElementById('left-toggle-button');
+  const leftBox = document.getElementById('left-box');
+  const leftToggleButton = document.getElementById('left-toggle-button');
 
-    leftToggleButton.addEventListener('click', function () {
-        leftBox.classList.toggle('expanded');
-
-        // Pfeilrichtung ändern
-        if (leftBox.classList.contains('expanded')) {
-            leftToggleButton.textContent = '◀'; // ausgeklappt
-        } else {
-            leftToggleButton.textContent = '▶'; // eingeklappt
-        }
-    });
+  leftToggleButton.addEventListener('click', function () {
+    leftBox.classList.toggle('expanded');
+    leftToggleButton.textContent = leftBox.classList.contains('expanded') ? '◀' : '▶';
+  });
 });
+
 
 
 function closeStartupHinweis() {
