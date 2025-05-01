@@ -300,5 +300,40 @@ def get_kommune_info(ags: str):
     except Exception as e:
         print("Fehler in /api/kommunen/{ags}:", e)
         return {"error": str(e)}
+        
 
- 
+@app.get("/api/energiemix/{ags}")
+def get_energiemix_verlauf(ags: str):
+    try:
+        conn = get_db_connection()
+        cur = conn.cursor()
+
+        cur.execute("""
+            SELECT jahr, gasheizung, oelheizung, elektr_direktheizung,
+                   fernwaerme, sonstiges
+            FROM energiemix_verlauf
+            WHERE ags = %s
+            ORDER BY jahr
+        """, (ags,))
+        
+        rows = cur.fetchall()
+        cur.close()
+        conn.close()
+
+        result = []
+        for row in rows:
+            result.append({
+                "jahr": row[0],
+                "Gas": row[1],
+                "Öl": row[2],
+                "Elektro": row[3],
+                "Fernwärme": row[4],
+                "Sonstiges": row[5]
+            })
+
+        return result
+
+    except Exception as e:
+        print("Fehler in /api/energiemix/{ags}:", e)
+        return {"error": str(e)}
+
