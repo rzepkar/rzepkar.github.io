@@ -356,3 +356,7 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 
+function closeStartupHinweis() {
+  const el = document.getElementById('startup-hinweis');
+  if (el) el.style.display = 'none';
+}

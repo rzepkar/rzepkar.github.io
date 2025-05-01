@@ -81,4 +81,36 @@ html, body { margin: 0; padding: 0; height: 100%; }
   display: block;
 }
 
+#startup-hinweis {
+  position: absolute;
+  top: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(6px);
+  padding: 14px 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  font-family: 'Segoe UI', sans-serif;
+  font-size: 14px;
+  z-index: 1500;
+  max-width: 90%;
+  text-align: center;
+}
+
+#startup-hinweis .close-button {
+  position: absolute;
+  top: 6px;
+  right: 10px;
+  background: transparent;
+  border: none;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  color: #666;
+}
+
+#startup-hinweis .close-button:hover {
+  color: #000;
+}
 
