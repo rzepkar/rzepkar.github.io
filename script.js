@@ -30,6 +30,13 @@ let drawControl = new L.Control.Draw({
 });
 map.addControl(drawControl);
 
+let drawPolygonTool = new L.Draw.Polygon(map, drawControl.options.draw.polygon);
+
+document.getElementById('start-draw-button').addEventListener('click', () => {
+    drawPolygonTool.enable();
+});
+
+
 map.on(L.Draw.Event.CREATED, function (e) {
     drawnItems.clearLayers(); // nur ein Polygon gleichzeitig
     let layer = e.layer;
@@ -312,20 +319,22 @@ L.control.groupedLayers(baseLayers, groupedOverlays, { collapsed: false }).addTo
 // 9️⃣ **Simulationsfunktionen**
 
 function auswertungFeaturesInPolygon(polygon) {
-    let enthalteneFeatures = [];
+    let enthaltene = [];
 
     map.eachLayer(layer => {
-        if (layer.feature && layer.getBounds && turf.booleanIntersects(layer.toGeoJSON(), polygon)) {
-            enthalteneFeatures.push(layer.feature.properties.name || 'Unbenannt');
+        if (layer.feature && turf.booleanIntersects(layer.toGeoJSON(), polygon)) {
+            let name = layer.feature.properties.name || layer.feature.properties.gen || 'Unbenannt';
+            enthaltene.push(name);
         }
     });
 
-    if (enthalteneFeatures.length > 0) {
-        alert("Enthaltene Features:\n" + enthalteneFeatures.join('\n'));
-    } else {
-        alert("Keine Features enthalten.");
-    }
+    let output = enthaltene.length
+        ? `<strong>${enthaltene.length} Objekte enthalten:</strong><ul>` + enthaltene.map(n => `<li>${n}</li>`).join('') + `</ul>`
+        : `<em>Keine enthaltenen Objekte gefunden.</em>`;
+
+    document.getElementById('draw-result').innerHTML = output;
 }
+
 
 
 //  Info-Box, mit API-Daten aus Kommunen und HTML-block mit Chart.js
