@@ -52,6 +52,7 @@ fetch('https://fastapi-heatbox.onrender.com/get_data')
 
 // --- Energieanlagen Layer
 let energieanlagenLayer = L.geoJSON(null, {
+	pane: 'interaktivePotenzialPane',
     pointToLayer: function (feature, latlng) {
         return L.marker(latlng, {
             icon: L.divIcon({
