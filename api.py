@@ -332,15 +332,15 @@ def get_waermenetze():
         print("Fehler in /get_waermenetze:", e)
         return {"error": str(e)}
 
-@app.get("/get_erzeugungspotentiale")
-def get_erzeugungspotentiale():
+@app.get("/get_erzeugungspotenziale")
+def get_erzeugungspotenziale():
     try:
         conn = get_db_connection()
         cur = conn.cursor()
         
         cur.execute("""
             SELECT name, art, bemerkung, erzeugungs, ST_AsGeoJSON(geom)
-            FROM erzeugungspotentiale;
+            FROM erzeugungspotenziale;
         """)
         
         features = []
@@ -362,5 +362,5 @@ def get_erzeugungspotentiale():
         return {"type": "FeatureCollection", "features": features}
     
     except Exception as e:
-        print("Fehler in /get_erzeugungspotentiale:", e)
+        print("Fehler in /get_erzeugungspotenziale:", e)
         return {"error": str(e)}

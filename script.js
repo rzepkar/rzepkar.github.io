@@ -197,7 +197,7 @@ fetch('https://fastapi-heatbox.onrender.com/get_waermenetze')
       waermenetzeLayer.addData(data).addTo(map);
   });
 
-let erzeugungspotentialeLayer = L.geoJSON(null, {
+let erzeugungspotenzialeLayer = L.geoJSON(null, {
     style: {
         color: '#0080ff',
         weight: 2,
@@ -218,10 +218,10 @@ let erzeugungspotentialeLayer = L.geoJSON(null, {
     }
 });
 
-fetch('https://fastapi-heatbox.onrender.com/get_erzeugungspotentiale')
+fetch('https://fastapi-heatbox.onrender.com/get_erzeugungspotenziale')
   .then(response => response.json())
   .then(data => {
-      erzeugungspotentialeLayer.addData(data).addTo(map);
+      erzeugungspotenzialeLayer.addData(data).addTo(map);
   });
 
 
@@ -238,7 +238,7 @@ let groupedOverlays = {
         "Wärmenetze": waermenetzeLayer
     },
     "Potenzial": {
-        "Erzeugungspotenzial": erzeugungspotentialeLayer
+        "Erzeugungspotenzial": erzeugungspotenzialeLayer
     }
 };
 
