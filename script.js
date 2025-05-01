@@ -253,44 +253,87 @@ resetButton.addTo(map);
 let chartInstance = null;
 
 function showInfoBox(data) {
-    // Box anzeigen
     document.getElementById("info-box").style.display = "block";
     document.getElementById("info-title").innerText = data.name;
 
-    // Status-Anzeige
     document.getElementById("info-status").innerHTML = `
         <span style="padding: 4px 8px; background: #eee; border-radius: 4px;">
-            Kommunale Wärmeplanung: ${data.kwp_status}
+            Status Kommunale Wärmeplanung: ${data.kwp_status}
         </span>
     `;
 
-    // Tortendiagramm rendern
+    // Chart vorbereiten
     const ctx = document.getElementById("energymixChart").getContext("2d");
 
-    // Vorherigen Chart zerstören
+    // Vorherigen Chart zerstören, falls vorhanden
     if (chartInstance) {
         chartInstance.destroy();
     }
 
-    chartInstance = new Chart(ctx, {
-        type: 'pie',
-        data: {
-            labels: Object.keys(data.energiemix),
-            datasets: [{
-                data: Object.values(data.energiemix),
-                backgroundColor: ['#f44336', '#ff9800', '#2196f3', '#4caf50']
-            }]
-        },
-        options: {
-            responsive: false,
-            plugins: {
-                legend: {
-                    position: 'bottom'
+    // ➕ Daten vom API-Endpunkt für den Verlauf laden
+    fetch(`https://fastapi-heatbox.onrender.com/api/energiemix/${data.ags}`)
+        .then(res => res.json())
+        .then(verlauf => {
+            const labels = verlauf.map(e => e.jahr);
+            const datasets = [
+                {
+                    label: 'Gas',
+                    data: verlauf.map(e => e.Gas),
+                    fill: true
+                },
+                {
+                    label: 'Öl',
+                    data: verlauf.map(e => e.Öl),
+                    fill: true
+                },
+                {
+                    label: 'Fernwärme',
+                    data: verlauf.map(e => e.Fernwärme),
+                    fill: true
+                },
+                {
+                    label: 'Elektro',
+                    data: verlauf.map(e => e.Elektro),
+                    fill: true
+                },
+                {
+                    label: 'Sonstiges',
+                    data: verlauf.map(e => e.Sonstiges),
+                    fill: true
                 }
-            }
-        }
-    });
+            ];
+
+            chartInstance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: datasets
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { position: 'bottom' }
+                    },
+                    scales: {
+                        y: {
+                            stacked: true,
+                            title: {
+                                display: true,
+                                text: 'Anteil (%)'
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Jahr'
+                            }
+                        }
+                    }
+                }
+            });
+        });
 }
+
 
 
 // Neues Skript für die linke aufklappbare Box
