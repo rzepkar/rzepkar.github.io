@@ -200,25 +200,26 @@
   </div>
 
   <!-- JS-Funktionen -->
-  <script>
-    function closeInfoBox() {
-      document.getElementById('info-box').style.display = 'none';
-    }
+	<script>
+	  function closeInfoBox() {
+		document.getElementById('info-box').style.display = 'none';
+	  }
 
-    function closeStartupHinweis() {
-      document.getElementById('startup-hinweis').style.display = 'none';
-    }
+	  function closeStartupHinweis() {
+		document.getElementById('startup-hinweis').style.display = 'none';
+	  }
 
-    // Sidebar auf-/zuklappen
-    document.addEventListener('DOMContentLoaded', function () {
-      const leftBox = document.getElementById('left-box');
-      const leftToggleButton = document.getElementById('left-toggle-button');
+	  // Sidebar auf-/zuklappen
+	  document.addEventListener('DOMContentLoaded', function () {
+		const leftBox = document.getElementById('left-box');
+		const leftToggleButton = document.getElementById('left-toggle-button');
 
-      leftToggleButton.addEventListener('click', function () {
-        leftBox.classList.toggle('expanded');
-        leftToggleButton.textContent = leftBox.classList.contains('expanded') ? '◀' : '▶';
-      });
-    });
-  </script>
+		leftToggleButton.addEventListener('click', function () {
+		  leftBox.classList.toggle('expanded');
+		  leftToggleButton.textContent = leftBox.classList.contains('expanded') ? '◀' : '▶';
+		});
+	  });
+	</script>
+
 </body>
 </html>
