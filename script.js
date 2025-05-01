@@ -175,6 +175,7 @@ fetch('https://fastapi-heatbox.onrender.com/get_kommunen')
   });
 
 let waermenetzeLayer = L.geoJSON(null, {
+	pane: 'interaktivePotenzialPane',
     style: {
         color: '#e67300',
         weight: 2,
@@ -202,6 +203,7 @@ fetch('https://fastapi-heatbox.onrender.com/get_waermenetze')
  
 
 let erzeugungspotenzialeLayer = L.geoJSON(null, {
+	pane: 'interaktivePotenzialPane',
     style: {
         color: '#0080ff',
         weight: 2,
@@ -232,7 +234,7 @@ fetch('https://fastapi-heatbox.onrender.com/get_erzeugungspotenziale')
 let eignungsgebieteLayer = L.geoJSON(null, {
 	pane: 'interaktivePotenzialPane',
     style: {
-        color: '#990099',
+        color: '#66bb6a',
         weight: 2,
         fillOpacity: 0.4
     },
@@ -265,11 +267,11 @@ let baseLayers = {
 let groupedOverlays = {
     "Bestand": {
         "Energieanlagen": energieanlagenLayer,
-        "Wärmenetze": waermenetzeLayer
+        "🟧 Wärmenetze": waermenetzeLayer
     },
     "Potenzial": {
-        "Erzeugungspotenzial": erzeugungspotenzialeLayer,
-		"Eignungsgebiete": eignungsgebieteLayer
+        "🟦 Erzeugungspotenzial": erzeugungspotenzialeLayer,
+		"🟩 Eignungsgebiete": eignungsgebieteLayer
     }
 };
 
