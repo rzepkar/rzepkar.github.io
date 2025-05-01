@@ -8,20 +8,20 @@
   <!-- Leaflet CSS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
 
+  <!-- Leaflet.draw CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet-draw@1.0.4/dist/leaflet.draw.css" />
+
   <!-- Grouped Layer Control CSS -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet-groupedlayercontrol/0.6.1/leaflet.groupedlayercontrol.min.css" />
 
   <!-- Dein eigenes Stylesheet -->
   <link rel="stylesheet" href="style.css" />
-  
-  <link rel="stylesheet" href="https://unpkg.com/leaflet-draw@1.0.4/dist/leaflet.draw.css" />
-  <script src="https://unpkg.com/leaflet-draw@1.0.4/dist/leaflet.draw.js"></script>
-  
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> <!-- Chart.js für die Info-Box -->
+
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
   <!-- ✨ Modernes UI Styling -->
   <style>
-    /* Info-Box Style */
     #info-box {
       position: absolute;
       right: 20px;
@@ -37,12 +37,11 @@
       z-index: 1000;
       display: none;
     }
-	
-	#info-title {
-	  margin-top: 0;
-	}
 
-    /* Close-Button Style */
+    #info-title {
+      margin-top: 0;
+    }
+
     #info-box .close-button {
       position: absolute;
       top: 8px;
@@ -54,11 +53,11 @@
       cursor: pointer;
       color: #666;
     }
+
     #info-box .close-button:hover {
       color: #000;
     }
 
-    /* Layer-Control modernisieren */
     .leaflet-control-layers {
       background: rgba(255, 255, 255, 0.60);
       backdrop-filter: blur(6px);
@@ -66,7 +65,6 @@
       box-shadow: 0 4px 12px rgba(0,0,0,0.2);
     }
 
-    /* Leaflet Popup modernisieren */
     .leaflet-popup-content-wrapper {
       background: rgba(255, 255, 255, 0.8);
       backdrop-filter: blur(4px);
@@ -75,12 +73,12 @@
       font-family: 'Segoe UI', sans-serif;
       font-size: 13px;
     }
+
     .leaflet-popup-tip {
       background: rgba(255, 255, 255, 0.8);
       backdrop-filter: blur(4px);
     }
 
-    /* Responsive Anpassungen */
     @media (max-width: 1200px) {
       #info-box {
         width: 250px;
@@ -98,34 +96,115 @@
         bottom: 10px;
       }
     }
+
+    #startup-hinweis {
+      position: absolute;
+      top: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(255, 255, 255, 0.75);
+      backdrop-filter: blur(6px);
+      padding: 10px 16px;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      font-family: 'Segoe UI', sans-serif;
+      font-size: 13px;
+      z-index: 1500;
+      max-width: 90%;
+      text-align: center;
+      line-height: 1.2;
+    }
+
+    #startup-hinweis .close-button {
+      position: absolute;
+      top: 6px;
+      right: 10px;
+      background: transparent;
+      border: none;
+      font-size: 18px;
+      font-weight: bold;
+      cursor: pointer;
+      color: #666;
+    }
+
+    #startup-hinweis .close-button:hover {
+      color: #000;
+    }
+
+    #left-box {
+      position: absolute;
+      top: 80px;
+      left: 0;
+      height: auto;
+      width: 40px;
+      background: rgba(255, 255, 255, 0.75);
+      backdrop-filter: blur(6px);
+      border-radius: 0 10px 10px 0;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      transition: width 0.3s ease;
+      overflow: hidden;
+      z-index: 1000;
+    }
+
+    #left-toggle-button {
+      background: transparent;
+      border: none;
+      font-size: 20px;
+      font-weight: bold;
+      cursor: pointer;
+      margin: 8px;
+      color: #666;
+    }
+
+    #left-toggle-button:hover {
+      color: #000;
+    }
+
+    #left-content {
+      display: none;
+      padding: 16px;
+      font-family: 'Segoe UI', sans-serif;
+      font-size: 14px;
+    }
+
+    #left-box.expanded {
+      width: 300px;
+    }
+
+    #left-box.expanded #left-content {
+      display: block;
+    }
   </style>
 </head>
 
 <body>
   <div id="map"></div>
-  
+
   <div id="startup-hinweis">
-	<button class="close-button" onclick="closeStartupHinweis()">×</button>
-	<p>
-		Hinweis: Diese Anwendung ist ein Prototyp, die verwendeten Daten sind teilweise fiktiv.
-	</p>
-  </div>
-  
-  <div id="left-box">
-	<button id="left-toggle-button">▶</button>
-	<div id="left-content">
-		<h2 style="margin-top: 0;">Dashboard Wärmeplanung</h2>
-		<h4>Platzhalter</h4>
-	</div>
+    <button class="close-button" onclick="closeStartupHinweis()">×</button>
+    <p>
+      Hinweis: Diese Anwendung ist ein Prototyp, die verwendeten Daten sind teilweise fiktiv.
+    </p>
   </div>
 
-  <!-- Leaflet JS -->
+  <div id="left-box">
+    <button id="left-toggle-button">▶</button>
+    <div id="left-content">
+      <h2 style="margin-top: 0;">Dashboard Wärmeplanung</h2>
+      <h4>Platzhalter</h4>
+    </div>
+  </div>
+
+  <!-- Leaflet (Pflicht) -->
   <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 
-  <!-- Grouped Layer Control JS -->
+  <!-- Leaflet.draw (muss nach Leaflet geladen werden) -->
+  <script src="https://unpkg.com/leaflet-draw@1.0.4/dist/leaflet.draw.js"></script>
+
+  <!-- Grouped Layer Control -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-groupedlayercontrol/0.6.1/leaflet.groupedlayercontrol.min.js"></script>
 
-  <!-- Zusätzliche Plugins -->
+  <!-- Weitere Plugins -->
   <script src="SmoothWheelZoom.js"></script>
   <script src="https://cdn.osmbuildings.org/OSMBuildings-Leaflet.js"></script>
   <script src="https://unpkg.com/leaflet.vectorgrid/dist/Leaflet.VectorGrid.bundled.js"></script>
@@ -133,30 +212,30 @@
 
   <!-- Dein Hauptskript -->
   <script src="script.js" defer></script>
-  
+
   <!-- Info-Box -->
   <div id="info-box">
     <button class="close-button" onclick="closeInfoBox()">×</button>
     <h4 id="info-title" style="margin-bottom: 6px; font-size: 16px;"></h4>
     <div id="info-status"></div>
-    
     <div id="info-contact" style="margin-top: 10px; margin-bottom: 10px; font-size: 12px; color: #555;">
       Haben Sie Fragen zur kommunalen Wärmeplanung?<br>
       <a href="mailto:deinemail@beispiel.de?subject=Frage%20zur%20kommunalen%20Wärmeplanung" style="color: #007bff; text-decoration: underline;">
         Stellen Sie sie gerne!
       </a>
     </div>
-
     <h4 style="margin-top: 0; margin-bottom: 8px;">Wärmebedarf</h4>
     <canvas id="energymixChart" width="280" height="280"></canvas>
   </div>
 
-  <!-- ✨ Close-Funktion -->
+  <!-- Mini JS-Funktion für die Info-Box -->
   <script>
     function closeInfoBox() {
       document.getElementById('info-box').style.display = 'none';
     }
+    function closeStartupHinweis() {
+      document.getElementById('startup-hinweis').style.display = 'none';
+    }
   </script>
-
 </body>
 </html>
