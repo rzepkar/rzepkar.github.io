@@ -165,34 +165,65 @@ let kommunenLayer = L.geoJSON(null, {
     }
 }); 
 
-
-
 fetch('https://fastapi-heatbox.onrender.com/get_kommunen')
   .then(response => response.json())
   .then(data => {
       kommunenLayer.addData(data).addTo(map);
   });
 
-// --- Windenergieanlagen Layer
-let windenergieLayer = L.geoJSON(null, {
+let waermenetzeLayer = L.geoJSON(null, {
+    style: {
+        color: '#e67300',
+        weight: 2,
+        fillOpacity: 0.4
+    },
     onEachFeature: function (feature, layer) {
         let props = feature.properties;
         layer.bindPopup(`
             <div style="font-family: sans-serif; font-size: 14px;">
                 <h4>${props.name}</h4>
                 <table>
-                    <tr><td><strong>Leistung:</strong></td><td>${props.leistung || ""}</td></tr>
+                    <tr><td><strong>Art:</strong></td><td>${props.art || ""}</td></tr>
+                    <tr><td><strong>Bemerkung:</strong></td><td>${props.bemerkung || ""}</td></tr>
                 </table>
             </div>
         `);
     }
 });
 
-fetch('https://fastapi-heatbox.onrender.com/get_windenergieanlagen')
+fetch('https://fastapi-heatbox.onrender.com/get_waermenetze')
   .then(response => response.json())
   .then(data => {
-      windenergieLayer.addData(data).addTo(map);
+      waermenetzeLayer.addData(data).addTo(map);
   });
+
+let erzeugungspotentialeLayer = L.geoJSON(null, {
+    style: {
+        color: '#0080ff',
+        weight: 2,
+        fillOpacity: 0.4
+    },
+    onEachFeature: function (feature, layer) {
+        let props = feature.properties;
+        layer.bindPopup(`
+            <div style="font-family: sans-serif; font-size: 14px;">
+                <h4>${props.name}</h4>
+                <table>
+                    <tr><td><strong>Art:</strong></td><td>${props.art || ""}</td></tr>
+                    <tr><td><strong>Erzeugung:</strong></td><td>${props.erzeugungs || ""}</td></tr>
+                    <tr><td><strong>Bemerkung:</strong></td><td>${props.bemerkung || ""}</td></tr>
+                </table>
+            </div>
+        `);
+    }
+});
+
+fetch('https://fastapi-heatbox.onrender.com/get_erzeugungspotentiale')
+  .then(response => response.json())
+  .then(data => {
+      erzeugungspotentialeLayer.addData(data).addTo(map);
+  });
+
 
 // 8️⃣ Layer-Control (gefixt für groupedLayerControl)
 let baseLayers = {

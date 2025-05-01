@@ -181,43 +181,6 @@ def get_kommunen():
         return {"error": str(e)}
 
 
-# GET: Tabelle Windenergieanlagen mit Case-Sensitivity
-@app.get("/get_windenergieanlagen")
-def get_windenergieanlagen():
-    try:
-        conn = get_db_connection()
-        cur = conn.cursor()
-        
-        # Anführungszeichen und Großbuchstaben beachten
-        cur.execute("""
-            SELECT 
-                id, name, leistung, ST_AsGeoJSON(geom) 
-            FROM "Windenergieanlagen";
-        """)
-        features = []
-        
-        for row in cur.fetchall():
-            feature = {
-                "type": "Feature",
-                "properties": {
-                    "id": row[0], 
-                    "name": row[1], 
-                    "leistung": row[2], 
-                },
-                "geometry": json.loads(row[3])
-            }
-            features.append(feature)
-        
-        cur.close()
-        conn.close()
-        
-        return {"type": "FeatureCollection", "features": features}
-    
-    except Exception as e:
-        print("Fehler in /get_windenergieanlagen:", e)
-        return {"error": str(e)}
- 
-
 
 # GET: Tabelle Energieanlagen mit Case-Sensitivity
 @app.get("/get_energieanlagen")
