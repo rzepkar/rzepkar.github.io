@@ -10,6 +10,9 @@ let map = L.map('map', {
 	//zoomControl: false // kein standard plus minus element von leaflet
 });
 
+map.createPane('interaktivePotenzialPane');
+map.getPane('interaktivePotenzialPane').style.zIndex = 650; // über allem außer Labels
+
 // Basemaps
 let cartoVoyagerNoLabels = L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager_nolabels/{z}/{x}/{y}{r}.png', {
     attribution: '&copy; CartoDB, OpenStreetMap contributors',
@@ -227,6 +230,7 @@ fetch('https://fastapi-heatbox.onrender.com/get_erzeugungspotenziale')
   
   
 let eignungsgebieteLayer = L.geoJSON(null, {
+	pane: 'interaktivePotenzialPane',
     style: {
         color: '#990099',
         weight: 2,
