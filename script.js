@@ -80,7 +80,7 @@ let energieanlagenLayer = L.geoJSON(null, {
                 <table>
                     <tr><td><strong>Typ:</strong></td><td>${props.anlage || ""}</td></tr>
                     <tr><td><strong>Leistung:</strong></td><td>${props.leistung || ""}</td></tr>
-                    <tr><td><strong>Träger:</strong></td><td>${props.energietraeger || ""}</td></tr>
+                    <tr><td><strong>Energieträger:</strong></td><td>${props.energietraeger || ""}</td></tr>
                 </table>
             </div>
         `);
@@ -136,9 +136,9 @@ let kommunenLayer = L.geoJSON(null, {
             <div style="font-family: sans-serif; font-size: 14px;">
                 <h4>${props.gen}</h4>
                 <table>
-                    <tr><td><strong>Bezirk:</strong></td><td>${props.bez || ""}</td></tr>
+                    <tr><td><strong>Landkreis:</strong></td><td>${props.bez || ""}</td></tr>
                     <tr><td><strong>AGS:</strong></td><td>${props.ags || ""}</td></tr>
-                    <tr><td><strong>Population:</strong></td><td>${props.population || ""}</td></tr>
+                    <tr><td><strong>Bevölkerung:</strong></td><td>${props.population || ""}</td></tr>
                 </table>
             </div>
         `);
