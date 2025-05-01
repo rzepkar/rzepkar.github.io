@@ -42,11 +42,11 @@ map.on(L.Draw.Event.CREATED, function (e) {
     let layer = e.layer;
     drawnItems.addLayer(layer);
 
-    let polygon = layer.toGeoJSON();
+    const polygon = layer.toGeoJSON(); // GeoJSON des gezeichneten Polygons
 
-    // Feature-Suche in Polygon starten
-    auswertungFeaturesInPolygon(polygon);
+    auswertungFeaturesInPolygon(polygon); // 👇 führt Auswertung durch
 });
+
 
 
 // Basemaps
@@ -319,22 +319,27 @@ L.control.groupedLayers(baseLayers, groupedOverlays, { collapsed: false }).addTo
 // 9️⃣ **Simulationsfunktionen**
 
 function auswertungFeaturesInPolygon(polygon) {
-    let enthaltene = [];
+    const ergebnisse = [];
 
-    map.eachLayer(layer => {
-        if (layer.feature && turf.booleanIntersects(layer.toGeoJSON(), polygon)) {
-            let name = layer.feature.properties.name || layer.feature.properties.gen || 'Unbenannt';
-            enthaltene.push(name);
-        }
+    // Hier alle GeoJSON-Layer prüfen (du kannst beliebig viele aufnehmen)
+    [energieanlagenLayer, waermenetzeLayer, erzeugungspotenzialeLayer, eignungsgebieteLayer].forEach(layerGroup => {
+        layerGroup.eachLayer(layer => {
+            if (layer.feature && turf.booleanIntersects(polygon, layer.toGeoJSON())) {
+                const props = layer.feature.properties;
+                const name = props.name || props.gen || "Unbenannt";
+                const art = props.art || props.anlage || "";
+                ergebnisse.push(`• ${name} ${art ? `(${art})` : ""}`);
+            }
+        });
     });
 
-    let output = enthaltene.length
-        ? `<strong>${enthaltene.length} Objekte enthalten:</strong><ul>` + enthaltene.map(n => `<li>${n}</li>`).join('') + `</ul>`
-        : `<em>Keine enthaltenen Objekte gefunden.</em>`;
-
-    document.getElementById('draw-result').innerHTML = output;
+    const ergebnisBox = document.getElementById("draw-result");
+    if (ergebnisse.length > 0) {
+        ergebnisBox.innerHTML = `<strong>${ergebnisse.length} Objekte enthalten:</strong><ul><li>${ergebnisse.join("</li><li>")}</li></ul>`;
+    } else {
+        ergebnisBox.innerHTML = `<em>Keine Objekte enthalten.</em>`;
+    }
 }
-
 
 
 //  Info-Box, mit API-Daten aus Kommunen und HTML-block mit Chart.js
@@ -425,8 +430,6 @@ function showInfoBox(data) {
         });
 }
 
-
-
 document.addEventListener('DOMContentLoaded', function () {
   const leftBox = document.getElementById('left-box');
   const leftToggleButton = document.getElementById('left-toggle-button');
@@ -436,8 +439,6 @@ document.addEventListener('DOMContentLoaded', function () {
     leftToggleButton.textContent = leftBox.classList.contains('expanded') ? '◀' : '▶';
   });
 });
-
-
 
 function closeStartupHinweis() {
   const el = document.getElementById('startup-hinweis');
