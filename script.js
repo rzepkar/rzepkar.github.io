@@ -327,44 +327,6 @@ function auswertungFeaturesInPolygon(polygon) {
     }
 }
 
-// 9️⃣ **Simulationsfunktionen 2 - alt **
-
-let tempLayer = L.layerGroup().addTo(map);
-
-map.on('click', function (e) {
-    let newFeature = L.circleMarker(e.latlng, { color: 'red', radius: 8 }).addTo(tempLayer);
-    simulateEffect(e.latlng);
-});
-
-function simulateEffect(position) {
-    map.eachLayer(layer => {
-        if (layer.feature && layer.feature.properties) {
-            let distance = layer.getLatLng().distanceTo(position);
-            if (distance < 100) {
-                layer.feature.properties.attribute += 1;
-                layer.bindPopup(`<b>${layer.feature.properties.name}</b><br>Attribute: ${layer.feature.properties.attribute}`).openPopup();
-            }
-        }
-    });
-}
-
-// 🔄 Reset-Button
-let resetButton = L.control({ position: "topright" });
-resetButton.onAdd = function () {
-    let div = L.DomUtil.create("div", "leaflet-bar leaflet-control leaflet-control-custom");
-    div.innerHTML = '<button style="background:white; padding:5px; border:1px solid black;">Reset</button>';
-    div.onclick = function () {
-        tempLayer.clearLayers();
-        map.eachLayer(layer => {
-            if (layer.feature && layer.feature.properties) {
-                layer.feature.properties.attribute = 10;
-                layer.bindPopup(`<b>${layer.feature.properties.name}</b><br>Attribute: ${layer.feature.properties.attribute}`);
-            }
-        });
-    };
-    return div;
-};
-resetButton.addTo(map);
 
 //  Info-Box, mit API-Daten aus Kommunen und HTML-block mit Chart.js
 
