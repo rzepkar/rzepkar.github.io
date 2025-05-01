@@ -317,6 +317,8 @@ function showInfoBox(data) {
                     scales: {
                         y: {
                             stacked: true,
+							min: 0, 
+							max: 100,							
                             title: {
                                 display: true,
                                 text: 'Anteil (%)'
