@@ -72,37 +72,38 @@ let rasterTiles = L.tileLayer('https://rzepkar.github.io/tiles/{z}/{x}/{y}.png',
 let osmb = new OSMBuildings(map).date(new Date());
 console.log("🛠 OSMBuildings initialisiert:", osmb);
 
-// 4️⃣ **Funktion: Gebäude laden & anzeigen**
 function loadBuildings(initialLoad = false) {
+    if (map.getZoom() !== 17) {
+        osmb.set(null); // Gebäude entfernen
+        console.log("📏 Nicht Zoomstufe 17 – Gebäude entfernt.");
+        return;
+    }
+
     fetch('https://fastapi-heatbox.onrender.com/get_buildings')
         .then(response => response.json())
         .then(data => {
-            console.log("✅ Gebäude-Daten erfolgreich empfangen:", data);
-
             if (!data.features || data.features.length === 0) {
                 console.warn("⚠️ Keine Gebäude-Daten vorhanden!");
+                osmb.set(null);
                 return;
             }
 
-            // **Höhenwerte prüfen**
-            let heights = data.features.map(f => f.properties.height);
-            console.log("🏗 Gebäudehöhen:", heights);
-
-            // Gebäude aktualisieren
             osmb.set(data);
             console.log("🏗 Gebäude aktualisiert.");
 
-            // **Nur beim ersten Laden die Karte auf das erste Gebäude setzen**
             if (initialLoad && data.features.length > 0) {
                 let firstBuilding = data.features[0].geometry.coordinates[0][0];
                 if (firstBuilding) {
-                    console.log("📍 Zentriere Karte auf:", firstBuilding);
                     map.setView([firstBuilding[1], firstBuilding[0]], map.getZoom(), { animate: false });
                 }
             }
         })
-        .catch(error => console.error('❌ Fehler beim Laden der Gebäudedaten:', error));
+        .catch(error => {
+            console.error('❌ Fehler beim Laden der Gebäudedaten:', error);
+            osmb.set(null); // sicherheitshalber leeren
+        });
 }
+
 
 // 5️⃣ **👀 Gebäude einmal initial laden (mit Zentrierung)**
 document.addEventListener("DOMContentLoaded", function() {
