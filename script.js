@@ -82,8 +82,6 @@ function loadBuildings(initialLoad = false) {
                 return;
             }
 			
-			osmb.set(data);
-		
 			osmb.style({
 			  wallColor: 'rgba(200, 190, 180, 0.8)',
 			  roofColor: 'rgba(220, 210, 200, 0.9)',
@@ -93,7 +91,9 @@ function loadBuildings(initialLoad = false) {
 				return feature.properties.height || 10;  // Deine Höhe wird hier verwendet
 			  }
 			});
-			
+						
+			osmb.set(data);
+		
             console.log("🏗 Gebäude aktualisiert.");
 
             if (initialLoad && data.features.length > 0) {
