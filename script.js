@@ -2,8 +2,8 @@
 let map = L.map('map', {
     center: [50.161505, 8.528824],  // Frankfurt am Main
     zoom: 14,
-    minZoom: 10,
-    maxZoom: 17,
+    minZoom: 9,
+    maxZoom: 16,
     scrollWheelZoom: true,
     smoothWheelZoom: false,
     smoothSensitivity: 1.3,
