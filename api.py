@@ -122,7 +122,7 @@ def get_buildings():
 
     # ❗️ST_Transform sorgt für die Umprojektion von 25832 → 4326 (WGS84)
     cur.execute("""
-        SELECT id, name, height, ST_AsGeoJSON(ST_Transform(geom, 4326)) 
+        SELECT id, name, height, ST_AsGeoJSON(geom, 4326)) 
         FROM buildings;
     """)
 
