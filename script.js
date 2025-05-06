@@ -67,18 +67,64 @@ let rasterTiles = L.tileLayer('https://rzepkar.github.io/tiles/{z}/{x}/{y}.png',
     attribution: '© Datenlizenz dl-by-de/2.0'
 }).addTo(map);
 
-// --- Features Layer
+
+// 3️⃣ OSMBuildings-Instanz erstellen (nur einmal!)
+let osmb = new OSMBuildings(map).date(new Date());
+console.log("🛠 OSMBuildings initialisiert:", osmb);
+
+// 4️⃣ **Funktion: Gebäude laden & anzeigen**
+function loadBuildings(initialLoad = false) {
+    fetch('https://fastapi-heatbox.onrender.com/get_buildings')
+        .then(response => response.json())
+        .then(data => {
+            console.log("✅ Gebäude-Daten erfolgreich empfangen:", data);
+
+            if (!data.features || data.features.length === 0) {
+                console.warn("⚠️ Keine Gebäude-Daten vorhanden!");
+                return;
+            }
+
+            // **Höhenwerte prüfen**
+            let heights = data.features.map(f => f.properties.height);
+            console.log("🏗 Gebäudehöhen:", heights);
+
+            // Gebäude aktualisieren
+            osmb.set(data);
+            console.log("🏗 Gebäude aktualisiert.");
+
+            // **Nur beim ersten Laden die Karte auf das erste Gebäude setzen**
+            if (initialLoad && data.features.length > 0) {
+                let firstBuilding = data.features[0].geometry.coordinates[0][0];
+                if (firstBuilding) {
+                    console.log("📍 Zentriere Karte auf:", firstBuilding);
+                    map.setView([firstBuilding[1], firstBuilding[0]], map.getZoom(), { animate: false });
+                }
+            }
+        })
+        .catch(error => console.error('❌ Fehler beim Laden der Gebäudedaten:', error));
+}
+
+// 5️⃣ **👀 Gebäude einmal initial laden (mit Zentrierung)**
+document.addEventListener("DOMContentLoaded", function() {
+    console.log("🚀 Initialisiere Karte & lade Gebäude...");
+    loadBuildings(true);
+});
+
+// 6️⃣ **🔄 Gebäude bei Zoom-Änderung aktualisieren (ohne Zentrierung)**
+map.on('zoomend', function() {
+    console.log("🔍 Zoom geändert. Gebäude werden neu geladen...");
+    loadBuildings(false);
+});
+
+// 7️⃣ **Layer für andere Geodaten laden**
 let featuresLayer = L.geoJSON(null, {
     onEachFeature: function (feature, layer) {
         let props = feature.properties;
-        layer.bindPopup(`
-            <div style="font-family: sans-serif; font-size: 14px;">
-                <h4 style="margin-bottom: 6px;">${props.name}</h4>
-                <p>${props.info || ""}</p>
-            </div>
-        `);
+        layer.bindPopup(`<b>${props.name}</b><br>Info: ${props.info}`);
     }
 });
+
+
 
 fetch('https://fastapi-heatbox.onrender.com/get_data')
   .then(response => response.json())
