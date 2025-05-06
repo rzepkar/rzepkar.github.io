@@ -113,7 +113,7 @@ def get_mvt(z: int, x: int, y: int):
     # Sicherstellen, dass ein valides Tile-Objekt geliefert wird
     return Response(content=row[0] if row and row[0] else b"", media_type="application/x-protobuf")
 
-'''
+
 # GET: Tabelle buildings     
 @app.get("/get_buildings")
 def get_buildings():
@@ -135,7 +135,7 @@ def get_buildings():
     conn.close()
 
     return {"type": "FeatureCollection", "features": features}
-'''
+
 
 # GET: Tabelle Kommunen mit Case-Sensitivity
 @app.get("/get_kommunen")
