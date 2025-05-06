@@ -319,26 +319,59 @@ L.control.groupedLayers(baseLayers, groupedOverlays, { collapsed: false }).addTo
 // 9️⃣ **Simulationsfunktionen**
 
 function auswertungFeaturesInPolygon(polygon) {
-    const ergebnisse = [];
+    const gruppenErgebnisse = {
+        "Kommunen": [],
+        "Energieanlagen": [],
+        "Wärmenetze": [],
+        "Erzeugungspotenzial": [],
+        "Eignungsgebiete": []
+    };
 
-    // Hier alle GeoJSON-Layer prüfen (du kannst beliebig viele aufnehmen)
-    [energieanlagenLayer, waermenetzeLayer, erzeugungspotenzialeLayer, eignungsgebieteLayer].forEach(layerGroup => {
-        layerGroup.eachLayer(layer => {
-            if (layer.feature && turf.booleanIntersects(polygon, layer.toGeoJSON())) {
-                const props = layer.feature.properties;
-                const name = props.name || props.gen || "Unbenannt";
-                const art = props.art || props.anlage || "";
-                ergebnisse.push(`• ${name} ${art ? `(${art})` : ""}`);
+    // Kommunen zuerst prüfen
+    kommunenLayer.eachLayer(layer => {
+        if (layer.feature && turf.booleanIntersects(polygon, layer.toGeoJSON())) {
+            const props = layer.feature.properties;
+            const name = props.gen || props.name || "Unbenannt";
+            gruppenErgebnisse["Kommunen"].push(name);
+        }
+    });
+
+    // Weitere Layer
+    [
+        { layer: energieanlagenLayer, key: "Energieanlagen", nameKey: "name", typeKey: "anlage" },
+        { layer: waermenetzeLayer, key: "Wärmenetze", nameKey: "name", typeKey: "art" },
+        { layer: erzeugungspotenzialeLayer, key: "Erzeugungspotenzial", nameKey: "name", typeKey: "art" },
+        { layer: eignungsgebieteLayer, key: "Eignungsgebiete", nameKey: "name", typeKey: "art" }
+    ].forEach(({ layer, key, nameKey, typeKey }) => {
+        layer.eachLayer(l => {
+            if (l.feature && turf.booleanIntersects(polygon, l.toGeoJSON())) {
+                const props = l.feature.properties;
+                const name = props[nameKey] || "Unbenannt";
+                const art = props[typeKey] ? ` (${props[typeKey]})` : "";
+                gruppenErgebnisse[key].push(`${name}${art}`);
             }
         });
     });
 
+    // HTML-Ausgabe
     const ergebnisBox = document.getElementById("draw-result");
-    if (ergebnisse.length > 0) {
-        ergebnisBox.innerHTML = `<strong>${ergebnisse.length} Objekte enthalten:</strong><ul><li>${ergebnisse.join("</li><li>")}</li></ul>`;
+    let html = "";
+
+    const hatErgebnisse = Object.values(gruppenErgebnisse).some(arr => arr.length > 0);
+
+    if (hatErgebnisse) {
+        for (const [gruppe, eintraege] of Object.entries(gruppenErgebnisse)) {
+            if (eintraege.length > 0) {
+                html += `<strong>${gruppe} (${eintraege.length}):</strong><ul>`;
+                html += eintraege.map(e => `<li>${e}</li>`).join("");
+                html += `</ul>`;
+            }
+        }
     } else {
-        ergebnisBox.innerHTML = `<em>Keine Objekte enthalten.</em>`;
+        html = "<em>Keine Objekte enthalten.</em>";
     }
+
+    ergebnisBox.innerHTML = html;
 }
 
 
