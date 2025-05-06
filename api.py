@@ -114,24 +114,29 @@ def get_mvt(z: int, x: int, y: int):
     return Response(content=row[0] if row and row[0] else b"", media_type="application/x-protobuf")
 
 
-# GET: Tabelle buildings     
 @app.get("/get_buildings")
 def get_buildings():
     conn = get_db_connection()
     cur = conn.cursor()
 
-    # ❗️ST_Transform sorgt für die Umprojektion von 25832 → 4326 (WGS84)
     cur.execute("""
-        SELECT id, name, height,
-               ST_AsGeoJSON(ST_Transform(ST_CollectionExtract(geom, 3), 4326))
+        SELECT 
+            id,
+            name,
+            height,
+            ST_AsGeoJSON(ST_Transform((ST_Dump(geom)).geom, 4326)) 
         FROM buildings;
     """)
-    features = []
 
+    features = []
     for row in cur.fetchall():
         feature = {
             "type": "Feature",
-            "properties": {"id": row[0], "name": row[1], "height": row[2]},
+            "properties": {
+                "id": row[0],
+                "name": row[1],
+                "height": float(row[2]) if row[2] is not None else 10.0
+            },
             "geometry": json.loads(row[3])
         }
         features.append(feature)
@@ -140,6 +145,7 @@ def get_buildings():
     conn.close()
 
     return {"type": "FeatureCollection", "features": features}
+
 
 
 # GET: Tabelle Kommunen mit Case-Sensitivity
