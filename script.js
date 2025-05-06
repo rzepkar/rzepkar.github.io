@@ -62,7 +62,7 @@ let darkNoLabels = L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/da
 
 let rasterTiles = L.tileLayer('https://rzepkar.github.io/tiles/{z}/{x}/{y}.png', {
     tileSize: 256,
-    maxZoom: 17,
+    maxZoom: 18,
     minZoom: 10,
     attribution: '© Datenlizenz dl-by-de/2.0'
 }).addTo(map);
