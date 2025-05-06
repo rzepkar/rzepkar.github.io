@@ -88,7 +88,11 @@ function loadBuildings(initialLoad = false) {
                 return;
             }
 
-            osmb.set(data);
+            data.features.forEach(f => {
+				f.properties.height = f.properties.height || 10;
+			});
+			
+			osmb.set(data);
             console.log("🏗 Gebäude aktualisiert.");
 
             if (initialLoad && data.features.length > 0) {
