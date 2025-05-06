@@ -120,7 +120,12 @@ def get_buildings():
     conn = get_db_connection()
     cur = conn.cursor()
 
-    cur.execute("SELECT id, name, height, ST_AsGeoJSON(geom) FROM buildings;")
+    # ❗️ST_Transform sorgt für die Umprojektion von 25832 → 4326 (WGS84)
+    cur.execute("""
+        SELECT id, name, height, ST_AsGeoJSON(ST_Transform(geom, 4326)) 
+        FROM buildings;
+    """)
+
     features = []
 
     for row in cur.fetchall():
