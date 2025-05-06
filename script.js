@@ -73,12 +73,6 @@ let osmb = new OSMBuildings(map)
     .load(); // <--- wichtig, um den Renderer zu aktivieren!
 
 function loadBuildings(initialLoad = false) {
-    if (map.getZoom() !== 17) {
-        osmb.set(null); // Gebäude entfernen
-        console.log("📏 Nicht Zoomstufe 17 – Gebäude entfernt.");
-        return;
-    }
-
     fetch('https://fastapi-heatbox.onrender.com/get_buildings')
         .then(response => response.json())
         .then(data => {
