@@ -125,9 +125,9 @@ def get_buildings():
             name,
             height,
             ST_AsGeoJSON(ST_Transform((ST_Dump(geom)).geom, 4326)) 
-        FROM buildings;
+        FROM buildings
+        LIMIT 200;
     """)
-
     features = []
     for row in cur.fetchall():
         feature = {
