@@ -68,10 +68,8 @@ let rasterTiles = L.tileLayer('https://rzepkar.github.io/tiles/{z}/{x}/{y}.png',
 }).addTo(map);
 
 
-let osmb = new OSMBuildings(map)
-    .date(new Date())
-    .view({ tilt: 45, rotation: 60 }) // <--- wichtig
-    .load();
+let osmb = new OSMBuildings(map).date(new Date());
+
 
 function loadBuildings(initialLoad = false) {
     fetch('https://fastapi-heatbox.onrender.com/get_buildings')
