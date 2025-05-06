@@ -68,9 +68,9 @@ let rasterTiles = L.tileLayer('https://rzepkar.github.io/tiles/{z}/{x}/{y}.png',
 }).addTo(map);
 
 
-// 3️⃣ OSMBuildings-Instanz erstellen (nur einmal!)
-let osmb = new OSMBuildings(map).date(new Date());
-console.log("🛠 OSMBuildings initialisiert:", osmb);
+let osmb = new OSMBuildings(map)
+    .date(new Date())
+    .load(); // <--- wichtig, um den Renderer zu aktivieren!
 
 function loadBuildings(initialLoad = false) {
     if (map.getZoom() !== 17) {
