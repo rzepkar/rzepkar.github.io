@@ -87,10 +87,6 @@ function loadBuildings(initialLoad = false) {
                 osmb.set(null);
                 return;
             }
-
-            data.features.forEach(f => {
-				f.properties.height = f.properties.height || 10;
-			});
 			
 			osmb.set(data);
             console.log("🏗 Gebäude aktualisiert.");
