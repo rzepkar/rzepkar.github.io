@@ -5,25 +5,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Heatbox - Interaktive Simulation</title>
 
-  <!-- Leaflet CSS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
 
-  <!-- Grouped Layer Control CSS -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet-groupedlayercontrol/0.6.1/leaflet.groupedlayercontrol.min.css" />
 
-  <!-- Dein eigenes Stylesheet -->
   <link rel="stylesheet" href="style.css" />
   
-  <!-- Leaflet.draw CSS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet-draw@1.0.4/dist/leaflet.draw.css" />
   
-  <!-- turf geoemtrieprüfung -->
   <script src="https://cdn.jsdelivr.net/npm/@turf/turf@6.5.0/turf.min.js"></script>
 
-  <!-- Chart.js für die Info-Box -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-  <!-- ✨ Modernes UI Styling -->
   <style>
     #info-box {
       position: absolute;
@@ -167,25 +160,19 @@
     </div>
   </div>
 
-  <!-- Leaflet JS -->
   <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 
-  <!-- Leaflet.draw -->
   <script src="https://unpkg.com/leaflet-draw@1.0.4/dist/leaflet.draw.js"></script>
 
-  <!-- Grouped Layer Control -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-groupedlayercontrol/0.6.1/leaflet.groupedlayercontrol.min.js"></script>
 
-  <!-- Zusätzliche Plugins -->
   <script src="SmoothWheelZoom.js"></script>
   <script src="https://cdn.osmbuildings.org/4.1.1/OSMBuildings-Leaflet.js"></script>
   <script src="https://unpkg.com/leaflet.vectorgrid/dist/Leaflet.VectorGrid.bundled.js"></script>
   <script src="https://unpkg.com/esri-leaflet-vector@3.0.2/dist/esri-leaflet-vector.js"></script>
 
-  <!-- Dein Hauptskript -->
   <script src="script.js" defer></script>
 
-  <!-- Info-Box -->
   <div id="info-box">
     <button class="close-button" onclick="closeInfoBox()">×</button>
     <h4 id="info-title" style="margin-bottom: 6px; font-size: 16px;"></h4>
