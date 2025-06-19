@@ -44,7 +44,7 @@ map.on(L.Draw.Event.CREATED, function (e) {
 
     const polygon = layer.toGeoJSON(); // GeoJSON des gezeichneten Polygons
 
-    auswertungFeaturesInPolygon(polygon); // 👇 führt Auswertung durch
+    auswertungFeaturesInPolygon(polygon); 
 });
 
 
@@ -284,7 +284,6 @@ fetch('https://fastapi-heatbox.onrender.com/get_eignungsgebiete')
 
 
 
-// 8️⃣ Layer-Control (gefixt für groupedLayerControl)
 let baseLayers = {
     "Helle Karte": cartoVoyagerNoLabels,
     "Helle Karte mit Bebauung": rasterTiles,
@@ -306,7 +305,6 @@ let groupedOverlays = {
 // Fix: group layers kommt als erstes Argument, base layers als zweites!
 L.control.groupedLayers(baseLayers, groupedOverlays, { collapsed: false }).addTo(map);
 
-// 9️⃣ **Simulationsfunktionen**
 
 function auswertungFeaturesInPolygon(polygon) {
     const gruppenErgebnisse = {
@@ -317,7 +315,6 @@ function auswertungFeaturesInPolygon(polygon) {
         "Eignungsgebiete": []
     };
 
-    // Kommunen zuerst prüfen
     kommunenLayer.eachLayer(layer => {
         if (layer.feature && turf.booleanIntersects(polygon, layer.toGeoJSON())) {
             const props = layer.feature.properties;
@@ -326,7 +323,6 @@ function auswertungFeaturesInPolygon(polygon) {
         }
     });
 
-    // Weitere Layer
     [
         { layer: energieanlagenLayer, key: "Energieanlagen", nameKey: "name", typeKey: "anlage" },
         { layer: waermenetzeLayer, key: "Wärmenetze", nameKey: "name", typeKey: "art" },
@@ -343,7 +339,6 @@ function auswertungFeaturesInPolygon(polygon) {
         });
     });
 
-    // HTML-Ausgabe
     const ergebnisBox = document.getElementById("draw-result");
     let html = "";
 
@@ -379,7 +374,6 @@ function showInfoBox(data) {
         </span>
     `;
 
-    // Chart vorbereiten
     const ctx = document.getElementById("energymixChart").getContext("2d");
 
     // Vorherigen Chart zerstören, falls vorhanden
@@ -387,7 +381,6 @@ function showInfoBox(data) {
         chartInstance.destroy();
     }
 
-    // ➕ Daten vom API-Endpunkt für den Verlauf laden
     fetch(`https://fastapi-heatbox.onrender.com/api/energiemix/${data.ags}`)
         .then(res => res.json())
         .then(verlauf => {
