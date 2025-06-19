@@ -7,10 +7,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from functools import lru_cache
 from starlette.responses import Response
 
-# FastAPI-Instanz erstellen
 app = FastAPI()
 
-# CORS erlauben, damit Leaflet auf die API zugreifen kann
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["https://rzepkar.github.io"], 
@@ -20,7 +18,7 @@ app.add_middleware(
 )
 
 def get_db_connection():
-    DATABASE_URL = os.getenv("DATABASE_URL")  # Render-Umgebungsvariable
+    DATABASE_URL = os.getenv("DATABASE_URL")  
     if DATABASE_URL is None:
         raise ValueError("DATABASE_URL ist nicht gesetzt!")
 
@@ -28,7 +26,7 @@ def get_db_connection():
     url = urllib.parse.urlparse(DATABASE_URL)
 
     return psycopg2.connect(
-        dbname=url.path[1:],  # Entfernt das führende "/"
+        dbname=url.path[1:],  
         user=url.username,
         password=url.password,
         host=url.hostname,
@@ -39,17 +37,16 @@ def get_db_connection():
 def test_db():
     try:
         conn = get_db_connection()
-        return {"status": "✅ Verbindung erfolgreich!"}
+        return {"status": " Verbindung erfolgreich!"}
     except Exception as e:
-        return {"status": "❌ Verbindung fehlgeschlagen!", "error": str(e)}
+        return {"status": " Verbindung fehlgeschlagen!", "error": str(e)}
 
 # GET: Tabelle features (erster Test, später löschen!)
 @app.get("/get_data")
 def get_data():
     conn = get_db_connection()
     cur = conn.cursor()
-    
-    # Daten aus PostGIS abrufen und als GeoJSON umwandeln
+
     cur.execute("SELECT id, name, info, ST_AsGeoJSON(geom) FROM features;")
     features = []
     
@@ -113,15 +110,12 @@ def get_mvt(z: int, x: int, y: int):
     # Sicherstellen, dass ein valides Tile-Objekt geliefert wird
     return Response(content=row[0] if row and row[0] else b"", media_type="application/x-protobuf")
 
-
-# GET: Tabelle Kommunen mit Case-Sensitivity
 @app.get("/get_kommunen")
 def get_kommunen():
     try:
         conn = get_db_connection()
         cur = conn.cursor()
         
-        # Anführungszeichen und Großbuchstaben beachten
         cur.execute("""
             SELECT 
                 id, objid, ags, gen, bez, nuts, population, konvoi, verfahren, 
@@ -157,16 +151,12 @@ def get_kommunen():
         print("Fehler in /get_kommunen:", e)
         return {"error": str(e)}
 
-
-
-# GET: Tabelle Energieanlagen mit Case-Sensitivity
 @app.get("/get_energieanlagen")
 def get_energieanlagen():
     try:
         conn = get_db_connection()
         cur = conn.cursor()
-        
-        # Anführungszeichen und Großbuchstaben beachten
+
         cur.execute("""
             SELECT 
                 id, name, anlage, leistung, energietraeger, ST_AsGeoJSON(geom) 
@@ -198,9 +188,6 @@ def get_energieanlagen():
         return {"error": str(e)}
         
         
-        
-        
-# GET: Einzelne Kommune mit Waermebedarf + Status
 @app.get("/api/kommunen/{ags}")
 def get_kommune_info(ags: str):
     try:
