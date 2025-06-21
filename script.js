@@ -64,7 +64,7 @@ let rasterTiles = L.tileLayer('https://rzepkar.github.io/tiles/{z}/{x}/{y}.png',
     tileSize: 256,
     maxZoom: 18,
     minZoom: 10,
-    attribution: '© Datenlizenz dl-by-de/2.0'
+    attribution: '© Datenlizenz DL‑DE‑Zero und fiktive Fachdaten.'
 }).addTo(map);
 
 
